@@ -54,6 +54,6 @@ demo for rafiki:
 Full documentation is hosted on [HERE](). 
 Sources are available in the `docs/` directory.
 
- ## License ##
+## License ##
 
 rafiki is licensed under the Apache License, Version 2.0 See LICENSE for full license text
