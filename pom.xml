@@ -34,4 +34,7 @@
       <scope>compile</scope>
     </dependency>
   </dependencies>
+  <organization>
+  	<name>PinaeOS</name>
+  </organization>
 </project>
