@@ -16,7 +16,7 @@ import org.pinae.rafiki.trigger.TriggerContainer;
  * @author Huiyugeng
  */
 public class TaskContainer {
-	private static Logger logger = Logger.getLogger(TaskContainer.class.getName());
+	private static Logger logger = Logger.getLogger(TaskContainer.class);
 
 	private String name = "default";
 

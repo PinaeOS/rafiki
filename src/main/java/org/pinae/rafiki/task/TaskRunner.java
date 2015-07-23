@@ -17,7 +17,7 @@ import org.pinae.rafiki.trigger.AbstractTrigger;
  * 
  */
 public final class TaskRunner extends TimerTask {
-	private static Logger logger = Logger.getLogger(TaskRunner.class.getName());
+	private static Logger logger = Logger.getLogger(TaskRunner.class);
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
