@@ -46,7 +46,7 @@ public class TaskManagerExamples {
 			container.add(helloTask);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(String.format("TaskManager Exception: exception=%s", e.getMessage()));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class TaskManagerExamples {
 		try {
 			Thread.sleep(timeout);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error(String.format("waits Exception: exception=%s", e.getMessage()));
 		}
 	}
 
