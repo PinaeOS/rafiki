@@ -19,6 +19,8 @@ public class TaskContainer {
 	private static Logger logger = Logger.getLogger(TaskContainer.class);
 
 	private String name = "default";
+	
+	private TaskContainerDaemon daemon = new TaskContainerDaemon();
 
 	private Map<String, TaskGroup> taskGroupMap = new HashMap<String, TaskGroup>();
 
@@ -33,10 +35,6 @@ public class TaskContainer {
 	private int groupCounter = 0;
 	private int taskCounter = 0;
 
-	/**
-	 * 
-	 * 
-	 */
 	public TaskContainer() {
 		taskGroupMap.put(TaskGroup.DEFAULT, new TaskGroup(TaskGroup.DEFAULT));
 	}
@@ -119,6 +117,7 @@ public class TaskContainer {
 	}
 
 	public void start(String groupName) {
+		
 		TaskGroup group = taskGroupMap.get(groupName);
 		if (group != null) {
 			group.start();
@@ -128,6 +127,8 @@ public class TaskContainer {
 	}
 
 	public void start() {
+		this.daemon.start();
+		
 		Set<String> groupNameSet = taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			if (StringUtils.isNotEmpty(groupName)) {
@@ -153,6 +154,8 @@ public class TaskContainer {
 	}
 
 	public void stop() {
+		this.daemon.stop();
+		
 		Set<String> groupNameSet = taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			if (StringUtils.isNotEmpty(groupName)) {

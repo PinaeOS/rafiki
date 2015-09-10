@@ -8,6 +8,16 @@ public class DelayJob implements Job {
 
 	private static Logger log = Logger.getLogger(DelayJob.class);
 	
+	private int jobId = 0;
+	
+	public DelayJob() {
+		
+	}
+	
+	public DelayJob(int jobId) {
+		this.jobId = jobId;
+	}
+	
 	public String getName() {
 		return "DelayJob";
 	}
@@ -18,7 +28,7 @@ public class DelayJob implements Job {
 		} catch (InterruptedException e) {
 			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
-		log.info(String.format("execute Exception: exception=%d",  System.currentTimeMillis()));
+		log.info(String.format("Delay Job %d Finish: time=%d",  jobId, System.currentTimeMillis()));
 		
 		return true;
 	}

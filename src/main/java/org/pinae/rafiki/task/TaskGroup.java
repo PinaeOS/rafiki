@@ -24,10 +24,8 @@ public class TaskGroup {
 
 	private String name = TaskGroup.DEFAULT;
 
-	private Timer timer;
-
 	private Map<String, Task> taskMap = new HashMap<String, Task>();
-	private Map<String, TaskRunner> taskRunnerMap = new HashMap<String, TaskRunner>();
+	private Map<String, Timer> taskTimerMap = new HashMap<String, Timer>();
 
 	public TaskGroup(String name) {
 		this.name = name;
@@ -71,7 +69,6 @@ public class TaskGroup {
 	}
 
 	public void start() {
-		timer = new Timer();
 		
 		for (Iterator<String> iterTaskName = taskMap.keySet().iterator(); iterTaskName.hasNext();) {
 			Task task = taskMap.get(iterTaskName.next());
@@ -82,9 +79,11 @@ public class TaskGroup {
 	
 	public void start(Task task){
 		if (task != null) {
+			Timer timer = new Timer();
+			
 			Trigger trigger = task.getTrigger();
 			
-			TaskRunner taskRunner = new TaskRunner(task);
+			TaskRunner taskRunner = new TaskRunner(timer, task);
 			if (task.getTrigger().isRepeat()) {
 				timer.schedule(taskRunner, trigger.getStartTime(), trigger.getRepeatInterval());
 			} else {
@@ -94,18 +93,14 @@ public class TaskGroup {
 			task.start();
 			
 			taskMap.put(task.getName(), task);
-			taskRunnerMap.put(task.getName(), taskRunner);
+			taskTimerMap.put(task.getName(), timer);
 		}
 	}
 
 	public void stop() {
-		
 		for (Iterator<String> iterTaskName = taskMap.keySet().iterator(); iterTaskName.hasNext();) {
 			stop(iterTaskName.next());
 		}
-		
-		timer.cancel();
-		timer.purge();
 
 		status = 1;
 	}
@@ -117,9 +112,10 @@ public class TaskGroup {
 			task.stop();
 		}
 		
-		TaskRunner taskRunner = taskRunnerMap.get(taskName);
-		if (taskRunner != null) {
-			taskRunner.cancel();
+		Timer taskTimer = taskTimerMap.get(taskName);
+		if (taskTimer != null) {
+			taskTimer.cancel();
+			taskTimer.purge();
 		}
 	}
 

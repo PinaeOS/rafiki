@@ -2,6 +2,7 @@ package org.pinae.rafiki.task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
@@ -29,9 +30,11 @@ public final class TaskRunner extends TimerTask {
 	
 	private AbstractTrigger trigger;
 
-
-	protected TaskRunner(Task task) {
+	private Timer timer;
+	
+	protected TaskRunner(Timer timer, Task task) {
 		this.task = task;
+		this.timer = timer;
 		
 		if (task instanceof TaskListener) {
 			taskListener = (TaskListener)task;
@@ -49,8 +52,6 @@ public final class TaskRunner extends TimerTask {
 		if (job instanceof JobListener) {
 			jobListener = (JobListener) job;
 		}
-		
-
 
 	}
 
@@ -100,8 +101,15 @@ public final class TaskRunner extends TimerTask {
 			}
 		} else {
 			logger.warn(String.format("task=%s; group=%s; date=%s; action=finish", task, task.getGroup(), dateFormat.format(new Date())));
-
-			super.cancel(); 
+			
+			//Stop TaskRunner
+			super.cancel();
+			//Stop Timer
+			if (this.timer != null) {
+				timer.cancel();
+				timer.purge();
+			}
+			//Reomve Task
 			task.getGroup().remove(task.getName()); 
 			
 			if (taskListener != null) {
