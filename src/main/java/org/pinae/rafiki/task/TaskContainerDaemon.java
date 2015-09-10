@@ -1,12 +1,23 @@
 package org.pinae.rafiki.task;
 
+/**
+ * Task Container Deamon
+ * 
+ * @author Huiyugeng
+ */
 public class TaskContainerDaemon implements Runnable {
 
 	private boolean stop = true;
+	
+	private TaskContainer container;
+	
+	public TaskContainerDaemon(TaskContainer container) {
+		this.container = container;
+	}
 
 	public void start() {
 		if (stop == true) {
-			new Thread(this, "Container-Deamon").start();
+			new Thread(this, String.format("%s Container-Deamon", container.getName())).start();
 			stop = false;
 		}
 	}

@@ -20,10 +20,13 @@ public class TaskContainer {
 
 	private String name = "default";
 	
-	private TaskContainerDaemon daemon = new TaskContainerDaemon();
+	/** Init daemon thread **/
+	private TaskContainerDaemon daemon = new TaskContainerDaemon(this);
 
+	/** Init task group map **/
 	private Map<String, TaskGroup> taskGroupMap = new HashMap<String, TaskGroup>();
-
+	
+	/** Init job and trigger container **/
 	private JobContainer jobContainer = new JobContainer();
 	private TriggerContainer triggerContainer = new TriggerContainer();
 	
@@ -38,7 +41,6 @@ public class TaskContainer {
 	public TaskContainer() {
 		taskGroupMap.put(TaskGroup.DEFAULT, new TaskGroup(TaskGroup.DEFAULT));
 	}
-
 
 	public TaskContainer(String name) {
 		this.name = name;
