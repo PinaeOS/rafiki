@@ -49,7 +49,7 @@ public class DateHelper {
 		Calendar now = now();
 		
 		day = now.get(Calendar.DAY_OF_MONTH) + day;
-		return year(now.get(Calendar.MONTH), day, now.get(Calendar.HOUR), now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
+		return year(now.get(Calendar.MONTH), day, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
 	}
 
 	public static Date nextDay(int day, int hour, int minute, int second) {
