@@ -1,4 +1,4 @@
-﻿package org.pinae.rafiki.job.impl;
+package org.pinae.rafiki.job.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
