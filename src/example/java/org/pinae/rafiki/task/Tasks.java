@@ -28,7 +28,7 @@ public class Tasks {
 		Task task = new Task();
 
 		ReflectionJob job = new ReflectionJob();
-		job.setClass("test.org.pinae.rafiki.job.HelloJob");
+		job.setClass("org.pinae.rafiki.job.HelloJob");
 		job.setMethod("sayHello");
 		Object[] parameters = new Object[2];
 		parameters[0] = new String("Hello");
@@ -45,7 +45,7 @@ public class Tasks {
 	public static Task getTimeTaskForMultiTrigger() throws JobException {
 		Task task = new Task();
 		ReflectionJob job = new ReflectionJob();
-		job.setClass("test.org.pinae.rafiki.job.TimeJob");
+		job.setClass("org.pinae.rafiki.job.TimeJob");
 		job.setMethod("showTime");
 
 		task.setName("TimeJob");
@@ -57,7 +57,7 @@ public class Tasks {
 	public static Task getTimeTaskForCalendarTrigger() throws JobException {
 		Task task = new Task();
 		ReflectionJob job = new ReflectionJob();
-		job.setClass("test.org.pinae.rafiki.job.TimeJob");
+		job.setClass("org.pinae.rafiki.job.TimeJob");
 		job.setMethod("showTime");
 
 		task.setName("TimeJob");
@@ -70,7 +70,7 @@ public class Tasks {
 		Task task = new Task();
 		MyJob job = new MyJob();
 
-		task.setName("My Job");
+		task.setName("MyJob");
 		task.setJob(job);
 		task.setTrigger(WeekdayTriggerExample.getTrigger());
 		return task;
@@ -81,7 +81,7 @@ public class Tasks {
 		Task task = new Task();
 		DelayJob job = new DelayJob();
 		
-		task.setName("Delay Job");
+		task.setName("DelayJob");
 		task.setJob(job);
 		task.setTrigger(CronTriggerExample.getTrigger0());
 		

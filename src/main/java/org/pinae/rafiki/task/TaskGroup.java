@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.pinae.rafiki.job.Job;
 import org.pinae.rafiki.trigger.Trigger;
 
@@ -79,7 +80,14 @@ public class TaskGroup {
 	
 	public void start(Task task){
 		if (task != null) {
-			Timer timer = new Timer();
+			String taskName = task.getName();
+			if (StringUtils.isEmpty(taskName)) {
+				taskName = task.toString();
+			}
+			if (taskName.length() > 32) {
+				taskName = taskName.substring(0, 32);
+			}
+			Timer timer = new Timer(taskName + "-Task");
 			
 			Trigger trigger = task.getTrigger();
 			
