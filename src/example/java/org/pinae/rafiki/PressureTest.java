@@ -27,7 +27,7 @@ public class PressureTest {
 			task.setName("delay-job:" + Integer.toString(i));
 			task.setJob(new DelayJob(i));
 			task.setTrigger(trigger);
-			container.add(task);
+			container.addTask(task);
 			
 			try {
 				Thread.sleep(2000);

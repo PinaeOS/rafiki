@@ -20,13 +20,13 @@ public class TaskContainer {
 
 	private String name = "default";
 	
-	/** Init daemon thread **/
+	/** Daemon thread **/
 	private TaskContainerDaemon daemon = new TaskContainerDaemon(this);
 
-	/** Init task group map **/
+	/** Task group map **/
 	private Map<String, TaskGroup> taskGroupMap = new HashMap<String, TaskGroup>();
 	
-	/** Init job and trigger container **/
+	/** Job and trigger container **/
 	private JobContainer jobContainer = new JobContainer();
 	private TriggerContainer triggerContainer = new TriggerContainer();
 	
@@ -46,22 +46,34 @@ public class TaskContainer {
 		this.name = name;
 		taskGroupMap.put(TaskGroup.DEFAULT, new TaskGroup(TaskGroup.DEFAULT));
 	}
+	
+	public TaskGroup addGroup(String groupName) {
+		
+		TaskGroup group = null;
+		
+		if (! taskGroupMap.containsKey(groupName)) {
+			if (groupCounter < maxGroup) {
+				group = new TaskGroup(groupName);
+				taskGroupMap.put(groupName, group);
+				groupCounter ++;
+			} else {
+				logger.error(String.format("container %s; exception=max group count is %d", name, maxGroup));
+			}
+		}
+		
+		return group;
+	}
 
-	public void add(Task task, String groupName) {
+	public void addTask(Task task, String groupName) {
 		TaskGroup group = taskGroupMap.get(groupName);
 
 		if (group == null) {
-			if (groupCounter < maxGroup) {
-				group = new TaskGroup(groupName);
-				groupCounter ++;
-			} else {
-				logger.warn(String.format("container=%s; exception=max group count is %d", name, maxGroup));
-			}
+			group = addGroup(groupName);
 		}
 		
 		if (group != null) {
 			if (taskCounter < maxTask && task != null) {
-				group.add(task);
+				group.addTask(task);
 				taskGroupMap.put(groupName, group); 
 		
 				jobContainer.add(task.getJob());
@@ -69,89 +81,129 @@ public class TaskContainer {
 				
 				taskCounter ++;
 		
-				logger.warn(String.format("task=%s; group=%s; action=add", task.getName(), groupName));
+				logger.debug(String.format("task=%s; group=%s; action=add", task.getName(), groupName));
 			} else {
-				logger.warn(String.format("container=%s; exception=max task count is %d", name, maxTask));
+				logger.error(String.format("container %s; exception=max task count is %d", name, maxTask));
 			}
 		}
 		
 	}
 
-
-	public void add(Task task) {
-		this.add(task, TaskGroup.DEFAULT);
+	public void addTask(Task task) {
+		this.addTask(task, TaskGroup.DEFAULT);
 	}
 
-
-	public void remove(String taskName, String groupName) {
+	public void removeTask(String taskName) {
+		this.removeTask(taskName, TaskGroup.DEFAULT);
+	}
+	
+	public void removeTask(String taskName, String groupName) {
 		TaskGroup group = taskGroupMap.get(groupName);
-		
 		if (group != null) {
 			group.stop(taskName);
 			
-			Task task = group.remove(taskName);
-			
+			Task task = group.removeTask(taskName);
 			if (task != null) {
 				jobContainer.remove(task.getJob());
 				triggerContainer.remove(task.getTrigger());
 				
-				logger.warn(String.format("task=%s; group=%s; action=remove", task.getName(), groupName));
+				logger.debug(String.format("task=%s; group=%s; action=remove", task.getName(), groupName));
 			}
-			
 			taskCounter --;
-
-			
 		}
 	}
 
-	public void remove(String taskName) {
-		this.remove(taskName, TaskGroup.DEFAULT);
-	}
-	
 	public void removeGroup(String groupName) {
 		if (!groupName.equals(TaskGroup.DEFAULT)) {
-			stop(groupName);
 			
-			taskGroupMap.remove(groupName);
-			
-			groupCounter --;
+			stopGroup(groupName);
+			TaskGroup taskGroup = taskGroupMap.remove(groupName);
+			if (taskGroup != null) {
+				groupCounter --;
+			}
+			logger.debug(String.format("group=%s; action=remove", groupName));
 		}
 	}
-
-	public void start(String groupName) {
-		
+	
+	public void startTask(String taskName) {
+		startTask(taskName, TaskGroup.DEFAULT);
+	}
+	
+	public void startTask(String taskName, String groupName) {
+		TaskGroup group = taskGroupMap.get(groupName);
+		if (group != null) {
+			group.start(taskName);
+		}
+		logger.debug(String.format("task=%s, group=%s; action=start", taskName, groupName));
+	}
+	
+	
+	public void startGroup(String groupName) {
 		TaskGroup group = taskGroupMap.get(groupName);
 		if (group != null) {
 			group.start();
 		}
-
-		logger.warn(String.format("group=%s; Action=start", groupName));
+		logger.debug(String.format("group=%s; action=start", groupName));
+	}
+	
+	public void start() {
+		start(false);
 	}
 
-	public void start() {
-		this.daemon.start();
-		
+	public void start(boolean daemon) {
+		if (daemon) {
+			this.daemon.start();
+		}
 		Set<String> groupNameSet = taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			if (StringUtils.isNotEmpty(groupName)) {
-				this.start(groupName);
+				this.startGroup(groupName);
 			}
 		}
 	}
+	
+	public void pause() {
+		Set<String> groupNameSet = taskGroupMap.keySet();
+		for (String groupName : groupNameSet) {
+			pauseGroup(groupName);
+		}
+	}
+	
+	public void pauseTask(String taskName) {
+		pauseTask(taskName, TaskGroup.DEFAULT);
+	}
+	
+	public void pauseTask(String taskName, String groupName) {
+		TaskGroup taskGroup = taskGroupMap.get(groupName);
+		if (taskGroup != null) {
+			taskGroup.pause(taskName);
+		}
+	}
+	
+	public void pauseGroup(String groupName) {
+		TaskGroup taskGroup = taskGroupMap.get(groupName);
+		if (taskGroup != null) {
+			taskGroup.pause();
+		}
+	}
+	
+	public void stopTask(String taskName) {
+		stopTask(taskName, TaskGroup.DEFAULT);
+	}
 
-	public void stop(String taskName, String groupName) {
+	public void stopTask(String taskName, String groupName) {
 		TaskGroup group = (TaskGroup) taskGroupMap.get(groupName);
 		if (group != null) {
 			group.stop(taskName);
-			logger.warn(String.format("task=%s, group=%s; action=stop", taskName, groupName));
+			logger.debug(String.format("task=%s, group=%s; action=stop", taskName, groupName));
 		}
 	}
 
-	public void stop(String groupName) {
+	public void stopGroup(String groupName) {
 		TaskGroup group = (TaskGroup) taskGroupMap.get(groupName);
 		if (group != null) {
 			group.stop();
-			logger.warn(String.format("group=%s; action=stop", groupName));
+			logger.debug(String.format("group=%s; action=stop", groupName));
 		}
 	}
 
@@ -161,7 +213,7 @@ public class TaskContainer {
 		Set<String> groupNameSet = taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			if (StringUtils.isNotEmpty(groupName)) {
-				this.stop(groupName);
+				this.stopGroup(groupName);
 			}
 		}
 	}

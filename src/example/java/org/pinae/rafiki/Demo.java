@@ -25,7 +25,7 @@ public class Demo {
 		task.setTrigger(new CronTrigger("0-30/5 * * * * * *"));
 		
 		TaskContainer container = new TaskContainer();
-		container.add(task);
+		container.addTask(task);
 		container.start();
 	}
 }

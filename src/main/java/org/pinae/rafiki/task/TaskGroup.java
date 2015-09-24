@@ -2,11 +2,12 @@ package org.pinae.rafiki.task;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.pinae.rafiki.job.Job;
 import org.pinae.rafiki.trigger.Trigger;
 
@@ -17,17 +18,21 @@ import org.pinae.rafiki.trigger.Trigger;
  * 
  */
 public class TaskGroup {
-
+	private static Logger logger = Logger.getLogger(TaskGroup.class);
+	
 	public static final String DEFAULT = "default";
 
 	/** Task Group Status, 0: Not any task 1: Tasks in group but not execute 2: Tasks executing **/
-	public int status = 0;
+	public enum Status {
+		NOT_ANY_TASK, READY_TO_RUN, RUNNING;
+	 }
+	
+	private Status status = Status.NOT_ANY_TASK;
 
 	private String name = TaskGroup.DEFAULT;
 
 	private Map<String, Task> taskMap = new HashMap<String, Task>();
-	private Map<String, Timer> taskTimerMap = new HashMap<String, Timer>();
-
+	
 	public TaskGroup(String name) {
 		this.name = name;
 	}
@@ -36,7 +41,12 @@ public class TaskGroup {
 		return taskMap.values();
 	}
 
-	public void add(Task task) {
+	public void addTask(Task task) {
+		if (task == null) {
+			logger.error("Task add FAIL, task is NULL");
+			return;
+		}
+		
 		String taskName = task.getName();
 		Job job = task.getJob();
 
@@ -47,21 +57,22 @@ public class TaskGroup {
 		task.setGroup(this);
 		taskMap.put(taskName, task);
 		
-		if (status == 0) {
-			status = 1;
-		} else if (status == 2) {
+		if (status == Status.NOT_ANY_TASK) {
+			status = Status.READY_TO_RUN;
+		} else if (status == Status.RUNNING) {
 			start(task);
 		}
 	}
 
-	public Task remove(String taskName) {
+	public Task removeTask(String taskName) {
 		Task task = null;
 
-		if (taskMap.size() > 0 && status != 2) {
-			if (taskMap.get(taskName) != null) {
+		if (taskMap.size() > 0) {
+			if (taskMap.containsKey(taskName)) {
 				task = taskMap.remove(taskName);
+				task.stop();
 				if (taskMap.size() == 0) {
-					status = 0;
+					status = Status.NOT_ANY_TASK;
 				}
 			}
 		}
@@ -71,46 +82,74 @@ public class TaskGroup {
 
 	public void start() {
 		
-		for (Iterator<String> iterTaskName = taskMap.keySet().iterator(); iterTaskName.hasNext();) {
-			Task task = taskMap.get(iterTaskName.next());
+		Set<String> taskNameSet = taskMap.keySet();
+		for (String taskName : taskNameSet) {
+			Task task = taskMap.get(taskName);
 			start(task);
 		}
-		status = 2;
+		status = Status.RUNNING;
+	}
+	
+	public void start(String taskName) {
+		Task task = taskMap.get(taskName);
+		start(task);
 	}
 	
 	public void start(Task task){
 		if (task != null) {
-			String taskName = task.getName();
-			if (StringUtils.isEmpty(taskName)) {
-				taskName = task.toString();
-			}
-			if (taskName.length() > 32) {
-				taskName = taskName.substring(0, 32);
-			}
-			Timer timer = new Timer(taskName + "-Task");
 			
-			Trigger trigger = task.getTrigger();
-			
-			TaskRunner taskRunner = new TaskRunner(timer, task);
-			if (task.getTrigger().isRepeat()) {
-				timer.schedule(taskRunner, trigger.getStartTime(), trigger.getRepeatInterval());
+			if (task.getStatus() == Task.Status.STOP) {
+				String taskName = task.getName();
+				if (StringUtils.isEmpty(taskName)) {
+					taskName = task.toString();
+				}
+				if (taskName.length() > 32) {
+					taskName = taskName.substring(0, 32);
+				}
+				Timer timer = new Timer(taskName + "-Task");
+				
+				Trigger trigger = task.getTrigger();
+				
+				TaskRunner taskRunner = new TaskRunner(timer, task);
+				if (task.getTrigger().isRepeat()) {
+					timer.schedule(taskRunner, trigger.getStartTime(), trigger.getRepeatInterval());
+				} else {
+					timer.schedule(taskRunner, trigger.getStartTime());
+				}
+				
+				task.start();
+				
+				taskMap.put(task.getName(), task);
 			} else {
-				timer.schedule(taskRunner, trigger.getStartTime());
+				task.start();
 			}
-			
-			task.start();
-			
-			taskMap.put(task.getName(), task);
-			taskTimerMap.put(task.getName(), timer);
+
+		}
+	}
+	
+	public void pause() {
+		Set<String> taskNameSet = taskMap.keySet();
+		for (String taskName : taskNameSet) {
+			pause(taskName);
+		}
+
+		status = Status.READY_TO_RUN;
+	}
+	
+	public void pause(String taskName) {
+		Task task = taskMap.get(taskName);
+		if (task != null) {
+			task.pause();
 		}
 	}
 
 	public void stop() {
-		for (Iterator<String> iterTaskName = taskMap.keySet().iterator(); iterTaskName.hasNext();) {
-			stop(iterTaskName.next());
+		Set<String> taskNameSet = taskMap.keySet();
+		for (String taskName : taskNameSet) {
+			stop(taskName);
 		}
 
-		status = 1;
+		status = Status.READY_TO_RUN;
 	}
 
 	public void stop(String taskName) {
@@ -118,12 +157,6 @@ public class TaskGroup {
 		Task task = taskMap.get(taskName);
 		if (task != null) {
 			task.stop();
-		}
-		
-		Timer taskTimer = taskTimerMap.get(taskName);
-		if (taskTimer != null) {
-			taskTimer.cancel();
-			taskTimer.purge();
 		}
 	}
 
@@ -135,7 +168,7 @@ public class TaskGroup {
 		this.name = name;
 	}
 
-	public int getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 

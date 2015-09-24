@@ -64,11 +64,11 @@ public final class TaskRunner extends TimerTask {
 
 		if (! trigger.isFinish() && task.getStatus() != Task.Status.STOP) {
 
-			if (trigger.match() && task.getStatus() == Task.Status.RUNNING) {
+			if (trigger.match() && task.getStatus() == Task.Status.RUNNING && task.getStatus() != Task.Status.PAUSE) {
 
 				long start = System.currentTimeMillis();
 
-				logger.warn(String.format("task=%s; group=%s; date=%s; action=start", task, task.getGroup(), dateFormat.format(new Date())));
+				logger.debug(String.format("task=%s; group=%s; date=%s; action=start", task, task.getGroup(), dateFormat.format(new Date())));
 
 				try {
 
@@ -87,7 +87,7 @@ public final class TaskRunner extends TimerTask {
 					}
 
 				} catch (Exception e) {
-					logger.warn(String.format("task=%s; group=%s; date=%s; exception=%s", task, task.getGroup(), dateFormat.format(new Date()),
+					logger.debug(String.format("task=%s; group=%s; date=%s; exception=%s", task, task.getGroup(), dateFormat.format(new Date()),
 							e.getMessage()));
 
 					if (jobListener != null) {
@@ -96,21 +96,20 @@ public final class TaskRunner extends TimerTask {
 				}
 
 				long end = System.currentTimeMillis();
-				logger.warn(String.format("task=%s; group=%s; date=%s; action=stop; used=%s ms", task, task.getGroup(),
+				logger.debug(String.format("task=%s; group=%s; date=%s; action=stop; used=%s ms", task, task.getGroup(),
 						dateFormat.format(new Date()), Long.toString(end - start)));
 			}
 		} else {
-			logger.warn(String.format("task=%s; group=%s; date=%s; action=finish", task, task.getGroup(), dateFormat.format(new Date())));
+			logger.debug(String.format("task=%s; group=%s; date=%s; action=finish", task, task.getGroup(), dateFormat.format(new Date())));
 			
 			//Stop TaskRunner
 			super.cancel();
+			
 			//Stop Timer
 			if (this.timer != null) {
 				timer.cancel();
 				timer.purge();
 			}
-			//Reomve Task
-			task.getGroup().remove(task.getName()); 
 			
 			if (taskListener != null) {
 				taskListener.finish();

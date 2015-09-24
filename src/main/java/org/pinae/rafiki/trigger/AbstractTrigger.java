@@ -14,7 +14,7 @@ public abstract class AbstractTrigger implements Trigger {
 
 	private Date endTime = null; 
 	private Date startTime = new Date();
-	private boolean repeat = false;
+	private boolean repeat = true;
 	private long repeatInterval = 1000;
 	private int repeatCount = 0;
 	private long startDelayTime = 0;

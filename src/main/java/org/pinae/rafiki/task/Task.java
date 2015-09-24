@@ -24,9 +24,15 @@ public class Task {
 	private Trigger trigger; 
 	
 	/** Task status,  0: STOP,  1: RUNNING , 2: PAUSE **/
-	private Status status = Status.PAUSE; //
+	private Status status = Status.STOP; //
 
 	public Task() {
+	}
+	
+	public Task(String name, Job job, Trigger trigger) {
+		this.name = name;
+		this.job = job;
+		this.trigger = trigger;
 	}
 
 	public void setName(String name) {
