@@ -8,7 +8,6 @@ import org.pinae.rafiki.job.JobException;
 
 /**
  * Reflection Job
- * 
  * Reflection to Java class and execute method
  * 
  * @author Huiyugeng

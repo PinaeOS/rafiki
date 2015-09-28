@@ -37,12 +37,14 @@ public class CronTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * Set cron text <br/>
+	 * <p>Set cron text</p>
 	 * 
+	 * <p>
 	 * Cron's field : second minute hour Day-of-month month Day-of-week year
-	 * <br/>
-	 * month: JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC <br/>
-	 * Day-of-week: SUN, MON, TUE, WED, THU, FRI, SAT <br/>
+	 * 
+	 * month: JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
+	 * Day-of-week: SUN, MON, TUE, WED, THU, FRI, SAT
+	 * </p>
 	 * 
 	 * <ul>
 	 * <li>every 10 seconds : 0-59/10 * * * * * *</li>
@@ -59,11 +61,13 @@ public class CronTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * Set time-zone to trigger <br/>
+	 * <p>Set time-zone to trigger</p>
 	 * 
-	 * for Example "GMT-8" is a time-zone <br/>
-	 * if zone set null, it will use TimeZone.getDefault() <br/>
-	 * 
+	 * <p>
+	 * for Example "GMT-8" is a time-zone
+	 * if zone set null, it will use TimeZone.getDefault() 
+	 * </p> 
+	 *
 	 * @param zone time-zone
 	 */
 	public void setTimeZone(String zone) {

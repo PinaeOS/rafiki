@@ -9,8 +9,7 @@ import org.pinae.rafiki.job.JobException;
 
 /**
  * Native Job
- * 
- * Execute local OS command
+ * Execute local command
  * 
  * @author Huiyugeng
  * 

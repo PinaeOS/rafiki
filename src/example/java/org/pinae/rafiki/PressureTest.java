@@ -1,5 +1,7 @@
 package org.pinae.rafiki;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.log4j.Logger;
 import org.pinae.rafiki.job.DelayJob;
 import org.pinae.rafiki.task.Task;
@@ -29,18 +31,19 @@ public class PressureTest {
 			task.setTrigger(trigger);
 			container.addTask(task);
 			
+			
 			try {
-				Thread.sleep(2000);
+				TimeUnit.SECONDS.sleep(2);
 			} catch (InterruptedException e) {
 				log.error(String.format("Exception: %s", e.getMessage()));
 			}
 		}
 		
 		
-		long endDelay = (repeat + 1) * 10 * 1000;
+		long endDelay = (repeat + 1) * 10;
 		log.info(String.format("Container End After %d ms", endDelay));
 		try {
-			Thread.sleep(endDelay);
+			TimeUnit.SECONDS.sleep(endDelay);
 		} catch (InterruptedException e) {
 			
 		}

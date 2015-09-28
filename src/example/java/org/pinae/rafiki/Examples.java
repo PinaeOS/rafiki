@@ -1,6 +1,7 @@
 package org.pinae.rafiki;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.pinae.rafiki.job.Job;
@@ -67,40 +68,33 @@ public class Examples {
 			
 			container.start(true);
 			
-			waits(11 * ONE_SECOND); // pause container
+			
+			TimeUnit.SECONDS.sleep(11); // pause container
 			log.info("---------Pause All---------");
 			container.pause();
 			
-			waits(10 * ONE_SECOND); // restart container
+			TimeUnit.SECONDS.sleep(10); // restart container
 			log.info("---------Restart All---------");
 			container.start();
 			
-			waits(11 * ONE_SECOND); // stop task A
+			TimeUnit.SECONDS.sleep(11); // stop task A
 			log.info("--------Stop Task A--------");
 			container.stopTask("TaskA");
 
-			waits(10 * ONE_SECOND); // start task A
+			TimeUnit.SECONDS.sleep(10); // start task A
 			log.info("--------Start Task A--------");
 			container.startTask("TaskA");
 			
-			waits(11 * ONE_SECOND); // remove task A
+			TimeUnit.SECONDS.sleep(11); // remove task A
 			log.info("--------Remove Task A--------");
 			container.removeTask("TaskA");
 			
-			waits(10 * ONE_SECOND); // stop container
+			TimeUnit.SECONDS.sleep(10); // stop container
 			log.info("---------Stop All---------");
 			container.stop();
 			
 		} catch (Exception e) {
 			log.error(String.format("TaskManager Exception: exception=%s", e.getMessage()));
-		}
-	}
-
-	private static void waits(long timeout) {
-		try {
-			Thread.sleep(timeout);
-		} catch (InterruptedException e) {
-			log.error(String.format("waits Exception: exception=%s", e.getMessage()));
 		}
 	}
 

@@ -77,11 +77,14 @@ public class EverydayTrigger extends AbstractTrigger {
 	}
 	
 	/**
-	 * Set time text
+	 * <p>Set time text</p>
+	 * 
+	 * <p>
 	 * time text format is 'starttime - endTime' and text support mutil time split by ';'
 	 * for example '12:00:00 - 14:00:00 ; 16:30:00 - 19:30:00'
+	 * </p>
 	 * 
-	 * @param timeText
+	 * @param timeText Time Text
 	 */
 	public void setTime(String timeText) {
 		if (StringUtils.isNotBlank(timeText)) {

@@ -57,11 +57,13 @@ public class CalendarTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * Set trigger's calendar time <br/>
+	 * <p>Set trigger's calendar time</p>
 	 * 
-	 * Calendar format is 'startTime - endTime' <br/>
-	 * Time format is 'yyyy/mm/dd HH/MM/SS' <br/>
+	 * <p>
+	 * Calendar format is 'startTime - endTime'
+	 * Time format is 'yyyy/mm/dd HH/MM/SS'
 	 * For example '2015/02/12 12:00:00 - 2015/02/13 12:00:00'
+	 * </p>
 	 * 
 	 * @param time calendar time
 	 */
@@ -100,11 +102,11 @@ public class CalendarTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * Set trigger's start time and end time if end time sets null, trigger will
-	 * never finish
+	 * Set trigger's start time and end time
+	 * if end time sets null task will never stop
 	 * 
-	 * @param startDate Trigger's start time
-	 * @param endDate Trigger's end time
+	 * @param startDate start time of task
+	 * @param endDate end time of task
 	 */
 	public void setTime(Date startDate, Date endDate) {
 		startDate = startDate == null ? new Date() : startDate;
@@ -117,6 +119,7 @@ public class CalendarTrigger extends AbstractTrigger {
 	 * Set trigger's start time and set end time to null
 	 * 
 	 * @param startDate
+	 * 
 	 */
 	public void setTime(Date startDate) {
 		startDate = startDate == null ? new Date() : startDate;

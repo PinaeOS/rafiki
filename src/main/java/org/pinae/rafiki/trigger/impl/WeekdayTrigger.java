@@ -35,10 +35,12 @@ public class WeekdayTrigger extends EverydayTrigger {
 	}
 	
 	/**
-	 * Set time-zone to trigger <br/>
+	 * <p>Set time-zone to trigger</p>
 	 * 
-	 * for Example "GMT-8" is a time-zone <br/>
-	 * if set null, it will use TimeZone.getDefault() <br/>
+	 * <p>
+	 * for Example "GMT-8" is a time-zone
+	 * if set null, it will use TimeZone.getDefault()
+	 * </p>
 	 * 
 	 * @param zone time-zone
 	 */
@@ -47,9 +49,9 @@ public class WeekdayTrigger extends EverydayTrigger {
 	}
 	
 	/**
-	 * Set weekday <br/>
+	 * Set weekday
 	 * 
-	 * 0 is Sunday and 6 is Friday <br/>
+	 * 0 is Sunday and 6 is Friday
 	 * 
 	 * @param weekday
 	 */

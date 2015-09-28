@@ -31,11 +31,14 @@ public class DailyTrigger extends EverydayTrigger {
 	}
 
 	/**
-	 * Set date text <br/>
+	 * <p>Set date text</p>
+	 * 
+	 * <p>
 	 * Date text format is 'yyyy/mm/dd' and text support mutil date split by ';' 
 	 * for example '2015/03/04 ; 2015/05/05'
+	 * </p>
 	 * 
-	 * @param dateText
+	 * @param dateText Date Text
 	 */
 	public void setDate(String dateText) {
 		if (StringUtils.isNotBlank(dateText)) {

@@ -1,5 +1,7 @@
 package org.pinae.rafiki;
 
+import java.util.Date;
+
 import org.pinae.rafiki.job.Job;
 import org.pinae.rafiki.job.JobException;
 import org.pinae.rafiki.task.Task;
@@ -15,7 +17,7 @@ public class Demo {
 			}
 	
 			public boolean execute() throws JobException {
-				System.out.println("Now is : " + Long.toString(System.currentTimeMillis()));
+				System.out.println("Now is : " + new Date().toString());
 				return true;
 			}
 		};

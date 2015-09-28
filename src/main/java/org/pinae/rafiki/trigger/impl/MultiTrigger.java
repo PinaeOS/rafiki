@@ -63,7 +63,7 @@ public class MultiTrigger extends AbstractTrigger {
 	/**
 	 * Add trigger to trigger set
 	 * 
-	 * @param trigger
+	 * @param trigger Trigger
 	 */
 	public void addTrigger(Trigger trigger) {
 		if (trigger != null) {
