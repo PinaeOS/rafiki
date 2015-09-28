@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.pinae.rafiki.job.JobContainer;
-import org.pinae.rafiki.trigger.TriggerContainer;
 
 /**
  * Task Container
@@ -25,10 +23,6 @@ public class TaskContainer {
 
 	/** Task group map **/
 	private Map<String, TaskGroup> taskGroupMap = new HashMap<String, TaskGroup>();
-	
-	/** Job and trigger container **/
-	private JobContainer jobContainer = new JobContainer();
-	private TriggerContainer triggerContainer = new TriggerContainer();
 	
 	/** Max groups in container **/
 	private int maxGroup = 10;
@@ -75,9 +69,6 @@ public class TaskContainer {
 			if (taskCounter < maxTask && task != null) {
 				group.addTask(task);
 				taskGroupMap.put(groupName, group); 
-		
-				jobContainer.add(task.getJob());
-				triggerContainer.add(task.getTrigger()); 
 				
 				taskCounter ++;
 		
@@ -104,9 +95,6 @@ public class TaskContainer {
 			
 			Task task = group.removeTask(taskName);
 			if (task != null) {
-				jobContainer.remove(task.getJob());
-				triggerContainer.remove(task.getTrigger());
-				
 				logger.debug(String.format("task=%s; group=%s; action=remove", task.getName(), groupName));
 			}
 			taskCounter --;
@@ -244,14 +232,6 @@ public class TaskContainer {
 
 	public Collection<TaskGroup> getTaskGroup() {
 		return taskGroupMap.values();
-	}
-
-	public JobContainer getJobContainer() {
-		return jobContainer;
-	}
-
-	public TriggerContainer getTriggerContainer() {
-		return triggerContainer;
 	}
 
 	public String toString() {
