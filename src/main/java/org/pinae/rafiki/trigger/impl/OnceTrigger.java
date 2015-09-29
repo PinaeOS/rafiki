@@ -5,7 +5,7 @@ import org.pinae.rafiki.trigger.AbstractTrigger;
 /**
  * 单词触发器
  * 
- * @author huiyugeng
+ * @author Huiyugeng
  *
  */
 public class OnceTrigger extends AbstractTrigger {

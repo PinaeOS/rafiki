@@ -3,7 +3,7 @@ package org.pinae.rafiki.listener;
 /**
  * 任务监听器
  * 
- * @author huiyugeng
+ * @author Huiyugeng
  *
  */
 public interface TaskListener {
