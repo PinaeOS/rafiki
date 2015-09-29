@@ -11,7 +11,7 @@ import org.pinae.rafiki.trigger.AbstractTrigger;
 import org.pinae.rafiki.trigger.TriggerException;
 
 /**
- * Cron Trigger
+ * Cron格式触发器
  * 
  * @author Huiyugeng
  * 
@@ -20,15 +20,31 @@ public class CronTrigger extends AbstractTrigger {
 	private CronParser cronParser;
 	private TimeZone zone = TimeZone.getDefault();
 
+	/**
+	 * 构造函数
+	 */
 	public CronTrigger() {
 		super.setRepeat(true);
 		super.setRepeatCount(0);
 	}
 
+	/**
+	 * 构造函数
+	 * 
+	 * @param cron Cron格式触发条件
+	 * 
+	 * @throws TriggerException 触发器异常
+	 */
 	public CronTrigger(String cron) throws TriggerException {
 		this(TimeZone.getDefault(), cron);
 	}
 
+	/**
+	 * 构造函数
+	 * 
+	 * @param zone 时区
+	 * @param cron Cron格式触发条件
+	 */
 	public CronTrigger(TimeZone zone, String cron) {
 		this();
 
@@ -37,21 +53,21 @@ public class CronTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * <p>Set cron text</p>
+	 * <p>设置Cron格式触发条件</p>
 	 * 
 	 * <p>
-	 * Cron's field : second minute hour Day-of-month month Day-of-week year
+	 * Cron格式 : second minute hour Day-of-month month Day-of-week year
 	 * 
-	 * month: JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
-	 * Day-of-week: SUN, MON, TUE, WED, THU, FRI, SAT
+	 * 月份: JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
+	 * 星期: SUN, MON, TUE, WED, THU, FRI, SAT
 	 * </p>
 	 * 
 	 * <ul>
-	 * <li>every 10 seconds : 0-59/10 * * * * * *</li>
-	 * <li>10-30 minute in every hour : * 10-30 * * * * *</li>
-	 * <li>every seconds in Auguest : * * * * AUG * *</li>
-	 * <li>10 seconds in Auguest 10-20 : 0-59/10 * * 10-20 AUG * *</li>
-	 * <li>10 seconds in every Friday : 0-59/10 * * * * FRI *</li>
+	 * <li>每 10 秒启动 : 				0-59/10 * * * * * *</li>
+	 * <li>每小时 10分-30分 每秒启动 : 	* 10-30 * * * * *</li>
+	 * <li>8月份每秒启动 : 				* * * * AUG * *</li>
+	 * <li>8月10日-20日, 每10秒启动 : 	0-59/10 * * 10-20 AUG * *</li>
+	 * <li>周五每10秒启动:				0-59/10 * * * * FRI *</li>
 	 * </ul>
 	 * 
 	 * @param cron Unix cron text
@@ -61,14 +77,14 @@ public class CronTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * <p>Set time-zone to trigger</p>
+	 * <p>设置触发器时区</p>
 	 * 
 	 * <p>
-	 * for Example "GMT-8" is a time-zone
-	 * if zone set null, it will use TimeZone.getDefault() 
+	 * 例如 "GMT-8"
+	 * 如果时区设置为null, 将使用 TimeZone.getDefault() 
 	 * </p> 
 	 *
-	 * @param zone time-zone
+	 * @param zone 时区
 	 */
 	public void setTimeZone(String zone) {
 		if (zone == null) {
@@ -95,9 +111,7 @@ public class CronTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * Cron text parser
-	 * 
-	 * @author Huiyugeng
+	 * Cron解析
 	 * 
 	 */
 	private class CronParser {
@@ -112,7 +126,7 @@ public class CronTrigger extends AbstractTrigger {
 
 		public CronParser(String cron) {
 			String cronItem[] = cron.split(" ");
-			// year is an optional field
+			// 年份是可选字段
 			if (cronItem.length == 6 || cronItem.length == 7) {
 				secondSet = parseInteger(cronItem[0], 0, 59);
 				minuteSet = parseInteger(cronItem[1], 0, 59);

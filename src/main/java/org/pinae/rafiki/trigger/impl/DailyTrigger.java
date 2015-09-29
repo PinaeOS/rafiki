@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Daily Trigger
+ * 日期触发器
  * 
  * @author Huiyugeng
  *
@@ -31,14 +31,14 @@ public class DailyTrigger extends EverydayTrigger {
 	}
 
 	/**
-	 * <p>Set date text</p>
+	 * <p>设置触发日期</p>
 	 * 
 	 * <p>
-	 * Date text format is 'yyyy/mm/dd' and text support mutil date split by ';' 
-	 * for example '2015/03/04 ; 2015/05/05'
+	 * 日期格式为: 'yyyy/mm/dd' 同时支持多个日期使用 ';' 进行分割 
+	 * 例如 '2015/03/04 ; 2015/05/05'
 	 * </p>
 	 * 
-	 * @param dateText Date Text
+	 * @param dateText 触发日期
 	 */
 	public void setDate(String dateText) {
 		if (StringUtils.isNotBlank(dateText)) {

@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
- * Date Helper
+ * 日期工具类
  * 
  * @author Huiyugeng
  *

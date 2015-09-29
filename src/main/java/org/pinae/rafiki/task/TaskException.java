@@ -1,7 +1,7 @@
 package org.pinae.rafiki.task;
 
 /**
- * Task Exception
+ * 任务异常
  * 
  * @author Huiyugeng
  * 

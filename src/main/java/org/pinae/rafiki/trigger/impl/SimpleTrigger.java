@@ -3,9 +3,7 @@ package org.pinae.rafiki.trigger.impl;
 import org.pinae.rafiki.trigger.AbstractTrigger;
 
 /**
- * Simple Trigger
- * 
- * Time interval repeat trigger
+ * 周期性触发器
  * 
  * @author Huiyugeng
  * 

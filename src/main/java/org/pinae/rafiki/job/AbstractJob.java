@@ -1,15 +1,20 @@
 package org.pinae.rafiki.job;
 
 /**
- * Abstrac tJob
+ * 作业抽象类
  * 
  * @author Huiyugeng
  * 
  */
 public abstract class AbstractJob implements Job {
-
+	/**
+	 * 作业序列号, 用于全局唯一识别, 任务序列号=任务名称-当前时间戳
+	 */
 	private String serial;
 
+	/**
+	 * 作业名称
+	 */
 	private String name;
 
 

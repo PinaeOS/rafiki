@@ -3,7 +3,7 @@ package org.pinae.rafiki.trigger.impl;
 import org.pinae.rafiki.trigger.AbstractTrigger;
 
 /**
- * Once Trigger
+ * 单词触发器
  * 
  * @author huiyugeng
  *

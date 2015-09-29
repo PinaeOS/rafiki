@@ -1,7 +1,7 @@
 package org.pinae.rafiki.job;
 
 /**
- * Job Exception
+ * 作业执行异常
  * 
  * @author Huiyugeng
  * 

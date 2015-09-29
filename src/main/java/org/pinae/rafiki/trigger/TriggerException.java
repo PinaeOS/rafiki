@@ -1,7 +1,7 @@
 package org.pinae.rafiki.trigger;
 
 /**
- * Trigger Exception
+ * 任务触发器异常
  * 
  * @author Huiyugeng
  * 

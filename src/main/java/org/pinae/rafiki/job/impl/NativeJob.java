@@ -8,8 +8,8 @@ import org.pinae.rafiki.job.AbstractJob;
 import org.pinae.rafiki.job.JobException;
 
 /**
- * Native Job
- * Execute local command
+ * 本地执行作业
+ * 支持调用本地命令行内容
  * 
  * @author Huiyugeng
  * 

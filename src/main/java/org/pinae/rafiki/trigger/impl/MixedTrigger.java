@@ -7,14 +7,14 @@ import org.pinae.rafiki.trigger.Trigger;
 import org.pinae.rafiki.trigger.AbstractTrigger;
 
 /**
- * Multi Trigger
+ * 混合触发器
  * 
- * Multi Trigger is a set of triggers to join one trigger
+ * 支持不同类型的触发器混合触发
  * 
- * @author huiyugeng
+ * @author Huiyugeng
  *
  */
-public class MultiTrigger extends AbstractTrigger {
+public class MixedTrigger extends AbstractTrigger {
 	
 	public final static int AND = 1;
 	public final static int OR = 0;
@@ -22,7 +22,10 @@ public class MultiTrigger extends AbstractTrigger {
 	
 	private Set<Trigger> triggerSet = new HashSet<Trigger>();
 	
-	public MultiTrigger(){
+	/**
+	 * 构造函数
+	 */
+	public MixedTrigger(){
 		super.setRepeat(true);
 		super.setRepeatCount(0);
 	}
@@ -61,9 +64,9 @@ public class MultiTrigger extends AbstractTrigger {
 	}
 	
 	/**
-	 * Add trigger to trigger set
+	 * 将触发器加入混合触发器中
 	 * 
-	 * @param trigger Trigger
+	 * @param trigger 需要添加的触发器
 	 */
 	public void addTrigger(Trigger trigger) {
 		if (trigger != null) {
@@ -75,12 +78,12 @@ public class MultiTrigger extends AbstractTrigger {
 	}
 	
 	/**
-	 * Set trigger's operate
+	 * <p>设置混合触发器操作</p>
 	 * 
-	 * For example: MultiTrigger.AND -- When all triggers match TRUE, MulitiTrigger matches TRUE
-	 * 				MultiTrigger.OD  -- When one of triggers matches TRUE, MulitiTrigger matches TRUE 
+	 * 例如: MultiTrigger.AND -- 当混合触发器中所有触发器都满足触发条件时, 混合触发器才触发 
+	 * 		MultiTrigger.OR  -- 当混合触发器中某一个触发器都满足触发条件时, 混合触发器触发 
 	 * 
-	 * @param operate 
+	 * @param operate 混合触发器条件
 	 */
 	public void setOperate(int operate) {
 		this.operate = operate;

@@ -7,8 +7,8 @@ import org.pinae.rafiki.job.AbstractJob;
 import org.pinae.rafiki.job.JobException;
 
 /**
- * Reflection Job
- * Reflection to Java class and execute method
+ * 反射类作业
+ * 根据赋予的类名, 方法名和参数执行对应的方法
  * 
  * @author Huiyugeng
  * 

@@ -12,8 +12,7 @@ import org.apache.log4j.Logger;
 import org.pinae.rafiki.trigger.AbstractTrigger;
 
 /**
- * Calendar Trigger
- * 
+ * 日历触发器
  * 
  * @author Huiyugeng
  *
@@ -57,15 +56,15 @@ public class CalendarTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * <p>Set trigger's calendar time</p>
+	 * <p>设置触发时间, 支持添加多个触发时间</p>
 	 * 
 	 * <p>
-	 * Calendar format is 'startTime - endTime'
-	 * Time format is 'yyyy/mm/dd HH/MM/SS'
-	 * For example '2015/02/12 12:00:00 - 2015/02/13 12:00:00'
+	 * 日历的格式是 'startTime - endTime'
+	 * 时间格式为 'yyyy/mm/dd HH/MM/SS'
+	 * 例如:  '2015/02/12 12:00:00 - 2015/02/13 12:00:00'
 	 * </p>
 	 * 
-	 * @param time calendar time
+	 * @param time 触发时间, 使用'startTime - endTime'格式
 	 */
 	public void setTime(String time) {
 		String startTime = "";
@@ -102,29 +101,32 @@ public class CalendarTrigger extends AbstractTrigger {
 	}
 
 	/**
-	 * Set trigger's start time and end time
-	 * if end time sets null task will never stop
+	 * <p>设置触发时间, 支持添加多个触发时间</p>
 	 * 
-	 * @param startDate start time of task
-	 * @param endDate end time of task
+	 * <p>
+	 * 如果结束时间为null, 则任务不会出现停止
+	 * </p>
+	 * 
+	 * @param startTime 任务开始时间
+	 * @param endtime 任务结束时间
 	 */
-	public void setTime(Date startDate, Date endDate) {
-		startDate = startDate == null ? new Date() : startDate;
-		endDate = endDate == null ? new Date() : endDate;
+	public void setTime(Date startTime, Date endtime) {
+		startTime = startTime == null ? new Date() : startTime;
+		endtime = endtime == null ? new Date() : endtime;
 
-		timeList.add(new Date[] { startDate, endDate });
+		timeList.add(new Date[] { startTime, endtime });
 	}
 
 	/**
-	 * Set trigger's start time and set end time to null
+	 * <p>设置触发开始时间, 支持添加多个触发时间</p>
 	 * 
-	 * @param startDate
+	 * @param startTime 任务开始时间
 	 * 
 	 */
-	public void setTime(Date startDate) {
-		startDate = startDate == null ? new Date() : startDate;
+	public void setTime(Date startTime) {
+		startTime = startTime == null ? new Date() : startTime;
 
-		timeList.add(new Date[] { startDate, null });
+		timeList.add(new Date[] { startTime, null });
 	}
 
 }

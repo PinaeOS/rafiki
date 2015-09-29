@@ -6,12 +6,13 @@ import org.apache.log4j.Logger;
 import org.pinae.rafiki.job.DelayJob;
 import org.pinae.rafiki.task.Task;
 import org.pinae.rafiki.task.TaskContainer;
+import org.pinae.rafiki.task.TaskException;
 import org.pinae.rafiki.trigger.impl.SimpleTrigger;
 
 public class PressureTest {
 	private static Logger log = Logger.getLogger(PressureTest.class);
 	
-	public static void main(String arg[]) {
+	public static void main(String arg[]) throws TaskException {
 		int taskNum = 5;
 		int repeat = 3;
 		

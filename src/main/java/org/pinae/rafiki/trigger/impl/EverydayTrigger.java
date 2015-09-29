@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.pinae.rafiki.trigger.AbstractTrigger;
 
 /**
- * Everyday Trigger
+ * 每天触发器
  * 
  * @author Huiyugeng
  *
@@ -77,14 +77,14 @@ public class EverydayTrigger extends AbstractTrigger {
 	}
 	
 	/**
-	 * <p>Set time text</p>
+	 * <p>设置触发时间段</p>
 	 * 
 	 * <p>
-	 * time text format is 'starttime - endTime' and text support mutil time split by ';'
-	 * for example '12:00:00 - 14:00:00 ; 16:30:00 - 19:30:00'
+	 * 时间段格式为 'starttime - endTime' 同时支持多个时间段使用 ';' 分割
+	 * 例如 '12:00:00 - 14:00:00 ; 16:30:00 - 19:30:00'
 	 * </p>
 	 * 
-	 * @param timeText Time Text
+	 * @param timeText 触发时间段
 	 */
 	public void setTime(String timeText) {
 		if (StringUtils.isNotBlank(timeText)) {

@@ -1,7 +1,7 @@
 package org.pinae.rafiki.listener;
 
 /**
- * Job Listener
+ * 作业监听器
  * 
  * @author Huiyugeng
  * 
@@ -9,22 +9,22 @@ package org.pinae.rafiki.listener;
 public interface JobListener {
 
 	/**
-	 * Before execute()
+	 * 作业执行前
 	 */
 	public void beforeJobExecute();
 
 	/**
-	 * After execute()
+	 * 作业执行后
 	 */
 	public void afterJobExecute();
 	
 	/**
-	 * execute() returns false
+	 * 当作业执行返回false
 	 */
 	public void executeFail();
 	
 	/**
-	 * execute() throws exception
+	 * 当作业执行抛出异常
 	 */
 	public void executeException();
 	

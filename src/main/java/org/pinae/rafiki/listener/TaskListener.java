@@ -1,19 +1,19 @@
 package org.pinae.rafiki.listener;
 
 /**
- * Task Listener
+ * 任务监听器
  * 
  * @author huiyugeng
  *
  */
 public interface TaskListener {
 	/**
-	 * Before task start
+	 * Task执行start后执行
 	 */
 	public void start();
 
 	/**
-	 * After task finish
+	 * Task执行stop后执行
 	 */
 	public void finish();
 }

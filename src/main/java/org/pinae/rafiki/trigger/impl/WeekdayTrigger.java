@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Weekday Trigger
+ * 星期触发器
  * 
  * @author Huiyugeng
  *
@@ -35,25 +35,25 @@ public class WeekdayTrigger extends EverydayTrigger {
 	}
 	
 	/**
-	 * <p>Set time-zone to trigger</p>
+	 * <p>设置触发器时区</p>
 	 * 
 	 * <p>
-	 * for Example "GMT-8" is a time-zone
-	 * if set null, it will use TimeZone.getDefault()
-	 * </p>
+	 * 例如 "GMT-8"
+	 * 如果时区设置为null, 将使用 TimeZone.getDefault() 
+	 * </p> 
 	 * 
-	 * @param zone time-zone
+	 * @param zone 时区
 	 */
 	public void setTimeZone(String zone){
 		this.zone = TimeZone.getTimeZone(zone);
 	}
 	
 	/**
-	 * Set weekday
+	 * <p>设置触发星期X</P>
 	 * 
-	 * 0 is Sunday and 6 is Friday
+	 * <p>取值范围: 0-6, 其中0是星期天, 6是星期六</p>
 	 * 
-	 * @param weekday
+	 * @param weekday 触发时间
 	 */
 	public void setWeekday(int weekday){
 		weekdayList.add(weekday);

@@ -3,7 +3,7 @@ package org.pinae.rafiki.trigger;
 import java.util.Date;
 
 /**
- * Trigger
+ * 任务触发器
  * 
  * @author Huiyugeng
  * 
