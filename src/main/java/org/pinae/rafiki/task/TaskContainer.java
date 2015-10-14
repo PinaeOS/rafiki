@@ -1,9 +1,9 @@
 package org.pinae.rafiki.task;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -29,16 +29,12 @@ public class TaskContainer {
 	/*
 	 * 任务组列表 <名称, 任务组>
 	 */
-	private Map<String, TaskGroup> taskGroupMap = new HashMap<String, TaskGroup>();
+	private Map<String, TaskGroup> taskGroupMap = new ConcurrentHashMap<String, TaskGroup>();
 	
 	/*
 	 * 最大任务组数据量, 默认10
 	 */
 	private int maxGroup = 10;
-	/*
-	 * 最大任务数量, 默认200
-	 */
-	private int maxTask = 200;
 	
 	/*
 	 * 任务组计数器
@@ -73,7 +69,7 @@ public class TaskContainer {
 	}
 	
 	/**
-	 * 向任务容器中增加一个任务组
+	 * 向任务容器中增加一个任务组, 默认任务数量为20
 	 * 
 	 * @param groupName 任务组名称
 	 * 
@@ -81,6 +77,19 @@ public class TaskContainer {
 	 * 
 	 */
 	public TaskGroup addGroup(String groupName) {
+		return addGroup(groupName, 20);
+	}
+	
+	/**
+	 * 向任务容器中增加一个任务组
+	 * 
+	 * @param groupName 任务组名称
+	 * @param maxTask 任务组最大任务数量
+	 * 
+	 * @return 添加后的任务组
+	 * 
+	 */
+	public TaskGroup addGroup(String groupName, int maxTask) {
 		
 		TaskGroup group = null;
 		
@@ -90,7 +99,7 @@ public class TaskContainer {
 				taskGroupMap.put(groupName, group);
 				groupCounter ++;
 			} else {
-				logger.error(String.format("container %s; exception=max group count is %d", name, maxGroup));
+				logger.error(String.format("container=%s; exception=max group count is %d", name, maxGroup));
 			}
 		}
 		
@@ -114,6 +123,8 @@ public class TaskContainer {
 		if (group == null) {
 			group = addGroup(groupName);
 		}
+		
+		int maxTask = group.getMaxTask();
 		
 		if (group != null) {
 			if (taskCounter < maxTask && task != null) {
@@ -420,23 +431,7 @@ public class TaskContainer {
 		this.maxGroup = maxGroup;
 	}
 
-	/**
-	 * 返回最大任务数量
-	 * 
-	 * @return 最大任务数量
-	 */
-	public int getMaxTask() {
-		return maxTask;
-	}
 
-	/**
-	 * 设置最大任务数量
-	 * 
-	 * @param maxTask 最大任务数量
-	 */
-	public void setMaxTask(int maxTask) {
-		this.maxTask = maxTask;
-	}
 
 	/**
 	 * 获取任务组集合

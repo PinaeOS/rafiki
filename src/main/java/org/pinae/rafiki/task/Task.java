@@ -15,34 +15,49 @@ public class Task {
 		STOP, RUNNING, PAUSE;
 	}
 	
-	/**
+	/*
 	 * 任务序列号, 全局唯一, 任务序列号=任务名称-时间戳
 	 */
 	private String serial;
 	
-	/**
+	/*
 	 * 任务名称
 	 */
 	private String name;
 	
-	/**
+	/*
 	 * 任务所属的任务组
 	 */
 	private TaskGroup group;
 
-	/**
+	/*
 	 * 作业
 	 */
 	private Job job;
 	
-	/**
-	 * 任务触发器
+	/*
+	 * 触发器
 	 */
 	private Trigger trigger;
+	
+	/*
+	 * 任务超时时间: 0 代表永不超时
+	 */
+	private long timeout;
+	
+	/*
+	 * 任务执行器
+	 */
+	private TaskRunner runner;
 
-	/** 任务状态, 0: STOP, 1: RUNNING , 2: PAUSE **/
-	private Status status = Status.STOP; //
+	/*
+	 *  任务状态, 0: STOP, 1: RUNNING , 2: PAUSE *
+	 */
+	private Status status = Status.STOP;
 
+	/**
+	 * 构造函数
+	 */
 	public Task() {
 	}
 
@@ -147,10 +162,6 @@ public class Task {
 		return serial;
 	}
 
-	public String toString() {
-		return serial;
-	}
-
 	/**
 	 * 获取任务状态
 	 * 
@@ -169,5 +180,43 @@ public class Task {
 		this.status = status;
 	}
 
+	/**
+	 * 获取任务超时
+	 * 
+	 * @return 任务超时时间 (ms)
+	 */
+	public long getTimeout() {
+		return timeout;
+	}
 
+	/**
+	 * 设置任务超时时间
+	 * 
+	 * @param timeout 任务超时时间 (ms)
+	 */
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
+	
+	/**
+	 * 获取任务执行器
+	 * 
+	 * @return 任务执行器
+	 */
+	public TaskRunner getRunner() {
+		return runner;
+	}
+	
+	/**
+	 * 注入任务执行器
+	 * 
+	 * @param runner 任务执行器
+	 */
+	public void setRunner(TaskRunner runner) {
+		this.runner = runner;
+	}
+
+	public String toString() {
+		return serial;
+	}
 }

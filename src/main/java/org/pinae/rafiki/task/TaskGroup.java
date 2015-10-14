@@ -206,12 +206,14 @@ public class TaskGroup {
 				long startTime = trigger.getStartTime().getTime() - now;
 				
 				TaskRunner taskRunner = new TaskRunner(task);
+				
 				if (task.getTrigger().isRepeat()) {
 					executor.scheduleWithFixedDelay(taskRunner, startTime, trigger.getRepeatInterval(), TimeUnit.MILLISECONDS);
 				} else {
 					executor.schedule(taskRunner, startTime, TimeUnit.MILLISECONDS);
 				}
 				
+				task.setRunner(taskRunner);
 				task.setStatus(Task.Status.RUNNING);
 				
 				taskMap.put(task.getName(), task);

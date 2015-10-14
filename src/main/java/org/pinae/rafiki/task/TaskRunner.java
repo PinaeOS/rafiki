@@ -43,6 +43,16 @@ public final class TaskRunner implements Runnable {
 	 */
 	private AbstractTrigger trigger;
 	
+	/*
+	 * 任务开始时间: 当触发器满足条件时, 设置任务执行的开始时间, 当任务结束后设置为-1
+	 */
+	private long startTime;
+	
+	/*
+	 * 本次执行是否超时: true 本次执行超时; false 本次执行未超时
+	 */
+	private boolean timeoutFlag = false;
+	
 	/**
 	 * 构造函数
 	 * 
@@ -80,8 +90,7 @@ public final class TaskRunner implements Runnable {
 
 			if (trigger.match() && task.getStatus() == Task.Status.RUNNING && task.getStatus() != Task.Status.PAUSE) {
 
-				long start = System.currentTimeMillis();
-				task.setStartTime(start);
+				this.startTime = System.currentTimeMillis();
 
 				logger.debug(String.format("task=%s; group=%s; date=%s; action=start", task, task.getGroup(), dateFormat.format(new Date())));
 
@@ -110,16 +119,15 @@ public final class TaskRunner implements Runnable {
 					}
 				}
 
-				long end = System.currentTimeMillis();
+				long endTime = System.currentTimeMillis();
 				logger.debug(String.format("task=%s; group=%s; date=%s; action=stop; used=%s ms", task, task.getGroup(),
-						dateFormat.format(new Date()), Long.toString(end - start)));
+						dateFormat.format(new Date()), Long.toString(endTime - startTime)));
 				
-				task.setStartTime(-1);
+				this.startTime = -1;
+				this.timeoutFlag = false;
 			}
 		} else {
 			logger.debug(String.format("task=%s; group=%s; date=%s; action=finish", task, task.getGroup(), dateFormat.format(new Date())));
-
-			this.stop();
 			
 			if (taskListener != null) {
 				taskListener.finish();
@@ -129,11 +137,26 @@ public final class TaskRunner implements Runnable {
 	}
 	
 	/**
-	 * 停止任务Timer
-	 * 
+	 * 设置超时标记为true
 	 */
-	public void stop() {
-
+	public void timeout() {
+		this.timeoutFlag = true;
+	}
+	
+	/**
+	 * 返回超时标记
+	 * 
+	 * @return 超时标记
+	 */
+	public boolean isTimeout() {
+		return timeoutFlag;
+	}
+	
+	/**
+	 * 返回本次任务执行的开始时间
+	 */
+	public long getStartTime() {
+		return this.startTime;
 	}
 
 }
