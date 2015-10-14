@@ -9,7 +9,9 @@ import org.pinae.rafiki.task.TaskContainer;
 import org.pinae.rafiki.trigger.impl.CronTrigger;
 
 public class Demo {
+	
 	public static void main(String arg[]) throws Exception {
+		
 		Task task = new Task();
 		Job job = new Job() {
 			public String getName() {

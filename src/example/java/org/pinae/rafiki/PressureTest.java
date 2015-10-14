@@ -10,7 +10,7 @@ import org.pinae.rafiki.task.TaskException;
 import org.pinae.rafiki.trigger.impl.SimpleTrigger;
 
 public class PressureTest {
-	private static Logger log = Logger.getLogger(PressureTest.class);
+	private static Logger logger = Logger.getLogger(PressureTest.class);
 	
 	public static void main(String arg[]) throws TaskException {
 		int taskNum = 5;
@@ -18,7 +18,6 @@ public class PressureTest {
 		
 		TaskContainer container = new TaskContainer();
 		container.setName("Pressure");
-		container.setMaxTask(10);
 		container.start();
 		
 		for (int i = 0; i < taskNum; i++) {
@@ -36,13 +35,13 @@ public class PressureTest {
 			try {
 				TimeUnit.SECONDS.sleep(2);
 			} catch (InterruptedException e) {
-				log.error(String.format("Exception: %s", e.getMessage()));
+				logger.error(String.format("Exception: %s", e.getMessage()));
 			}
 		}
 		
 		
 		long endDelay = (repeat + 1) * 10;
-		log.info(String.format("Container End After %d ms", endDelay));
+		logger.info(String.format("Container End After %d s", endDelay));
 		try {
 			TimeUnit.SECONDS.sleep(endDelay);
 		} catch (InterruptedException e) {
@@ -50,7 +49,7 @@ public class PressureTest {
 		}
 		
 		container.stop();
-		log.info("Container End");
+		logger.info("Container End");
 		
 	}
 }

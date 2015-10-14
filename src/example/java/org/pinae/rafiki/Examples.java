@@ -13,7 +13,7 @@ import org.pinae.rafiki.trigger.impl.SimpleTrigger;
 
 public class Examples {
 
-	private static Logger log = Logger.getLogger(Examples.class);
+	private static Logger logger = Logger.getLogger(Examples.class);
 	
 	private static final int ONE_SECOND = 1000;
 	
@@ -27,7 +27,7 @@ public class Examples {
 				}
 
 				public boolean execute() throws JobException {
-					log.info("JobA : Now is " + new Date().toString());
+					logger.info("JobA : Now is " + new Date().toString());
 					return true;
 				}
 				
@@ -45,7 +45,7 @@ public class Examples {
 				}
 
 				public boolean execute() throws JobException {
-					log.info("JobB : Now is " + new Date().toString());
+					logger.info("JobB : Now is " + new Date().toString());
 					return true;
 				}
 				
@@ -63,38 +63,38 @@ public class Examples {
 			container.addTask(taskB);
 			
 			
-			log.info("start at " + new Date().toString());
-			log.info("----Start (With Daemon)----");
+			logger.info("start at " + new Date().toString());
+			logger.info("----Start (With Daemon)----");
 			
 			container.start(true);
 			
 			
 			TimeUnit.SECONDS.sleep(11); // pause container
-			log.info("---------Pause All---------");
+			logger.info("---------Pause All---------");
 			container.pause();
 			
 			TimeUnit.SECONDS.sleep(10); // restart container
-			log.info("---------Restart All---------");
+			logger.info("---------Restart All---------");
 			container.start();
 			
 			TimeUnit.SECONDS.sleep(11); // stop task A
-			log.info("--------Stop Task A--------");
+			logger.info("--------Stop Task A--------");
 			container.stopTask("TaskA");
 
 			TimeUnit.SECONDS.sleep(10); // start task A
-			log.info("--------Start Task A--------");
+			logger.info("--------Start Task A--------");
 			container.startTask("TaskA");
 			
 			TimeUnit.SECONDS.sleep(11); // remove task A
-			log.info("--------Remove Task A--------");
+			logger.info("--------Remove Task A--------");
 			container.removeTask("TaskA");
 			
 			TimeUnit.SECONDS.sleep(10); // stop container
-			log.info("---------Stop All---------");
+			logger.info("---------Stop All---------");
 			container.stop();
 			
 		} catch (Exception e) {
-			log.error(String.format("TaskManager Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("TaskManager Exception: exception=%s", e.getMessage()));
 		}
 	}
 
