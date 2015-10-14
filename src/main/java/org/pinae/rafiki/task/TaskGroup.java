@@ -1,10 +1,11 @@
 package org.pinae.rafiki.task;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,19 +44,40 @@ public class TaskGroup {
 	 * 设置默认任务组名称为:default-group
 	 */
 	private String name = TaskGroup.DEFAULT;
+	
+	/*
+	 * 设置默认
+	 */
+	private int maxTask = 100;
 
 	/*
 	 * 任务列表
 	 */
-	private Map<String, Task> taskMap = new HashMap<String, Task>();
+	private Map<String, Task> taskMap = new ConcurrentHashMap<String, Task>();
+	
+	private ScheduledThreadPoolExecutor executor;
+	
+	/**
+	 * 构造函数, 默认20个任务 
+	 * 
+	 * @param name 任务组名称
+	 * 
+	 */
+	public TaskGroup(String name) {
+		this(name, 20);
+	}
 	
 	/**
 	 * 构造函数
 	 * 
-	 * @param name 任务名称
+	 * @param name 任务组名称
+	 * @param maxTask 任务组最大任务数量
 	 */
-	public TaskGroup(String name) {
+	public TaskGroup(String name, int maxTask) {
 		this.name = name;
+		this.maxTask = maxTask;
+		
+		executor = new ScheduledThreadPoolExecutor(maxTask);
 	}
 
 	/**
@@ -86,7 +108,10 @@ public class TaskGroup {
 		if (taskName == null) {
 			task.setName(job.getName() != null ? job.getName() : job.toString());
 		}
-
+		if (taskMap.containsKey(taskName)) {
+			throw new TaskException("Already has same task name : " + taskName);
+		}
+		
 		task.setGroup(this);
 		taskMap.put(taskName, task);
 		
@@ -175,15 +200,16 @@ public class TaskGroup {
 				if (taskName.length() > 32) {
 					taskName = taskName.substring(0, 32);
 				}
-				Timer timer = new Timer(taskName + "-Task");
 				
 				Trigger trigger = task.getTrigger();
+				long now = System.currentTimeMillis();
+				long startTime = trigger.getStartTime().getTime() - now;
 				
-				TaskRunner taskRunner = new TaskRunner(timer, task);
+				TaskRunner taskRunner = new TaskRunner(task);
 				if (task.getTrigger().isRepeat()) {
-					timer.schedule(taskRunner, trigger.getStartTime(), trigger.getRepeatInterval());
+					executor.scheduleWithFixedDelay(taskRunner, startTime, trigger.getRepeatInterval(), TimeUnit.MILLISECONDS);
 				} else {
-					timer.schedule(taskRunner, trigger.getStartTime());
+					executor.schedule(taskRunner, startTime, TimeUnit.MILLISECONDS);
 				}
 				
 				task.setStatus(Task.Status.RUNNING);
@@ -238,7 +264,9 @@ public class TaskGroup {
 		for (String taskName : taskNameSet) {
 			stop(taskName);
 		}
-
+		if (executor != null) {
+			executor.shutdown();
+		}
 		status = Status.READY_TO_RUN;
 	}
 
@@ -288,6 +316,15 @@ public class TaskGroup {
 	 */
 	public Status getStatus() {
 		return status;
+	}
+	
+	/**
+	 * 返回最大任务数量
+	 * 
+	 * @return 最大任务数量
+	 */
+	public int getMaxTask() {
+		return maxTask;
 	}
 
 	public String toString() {

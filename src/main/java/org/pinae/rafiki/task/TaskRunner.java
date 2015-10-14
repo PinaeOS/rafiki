@@ -2,8 +2,6 @@ package org.pinae.rafiki.task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.pinae.rafiki.job.Job;
@@ -17,7 +15,7 @@ import org.pinae.rafiki.trigger.AbstractTrigger;
  * @author Huiyugeng
  * 
  */
-public final class TaskRunner extends TimerTask {
+public final class TaskRunner implements Runnable {
 	private static Logger logger = Logger.getLogger(TaskRunner.class);
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,18 +42,14 @@ public final class TaskRunner extends TimerTask {
 	 * 任务触发器
 	 */
 	private AbstractTrigger trigger;
-
-	private Timer timer;
 	
 	/**
 	 * 构造函数
 	 * 
-	 * @param timer Timer时间触发器
 	 * @param task 需要执行的任务
 	 */
-	protected TaskRunner(Timer timer, Task task) {
+	protected TaskRunner(Task task) {
 		this.task = task;
-		this.timer = timer;
 		
 		if (task instanceof TaskListener) {
 			taskListener = (TaskListener)task;
@@ -76,7 +70,6 @@ public final class TaskRunner extends TimerTask {
 
 	}
 
-	@Override
 	public void run() {
 		
 		if (trigger == null) {
@@ -88,6 +81,7 @@ public final class TaskRunner extends TimerTask {
 			if (trigger.match() && task.getStatus() == Task.Status.RUNNING && task.getStatus() != Task.Status.PAUSE) {
 
 				long start = System.currentTimeMillis();
+				task.setStartTime(start);
 
 				logger.debug(String.format("task=%s; group=%s; date=%s; action=start", task, task.getGroup(), dateFormat.format(new Date())));
 
@@ -119,23 +113,27 @@ public final class TaskRunner extends TimerTask {
 				long end = System.currentTimeMillis();
 				logger.debug(String.format("task=%s; group=%s; date=%s; action=stop; used=%s ms", task, task.getGroup(),
 						dateFormat.format(new Date()), Long.toString(end - start)));
+				
+				task.setStartTime(-1);
 			}
 		} else {
 			logger.debug(String.format("task=%s; group=%s; date=%s; action=finish", task, task.getGroup(), dateFormat.format(new Date())));
-			
-			//Stop TaskRunner
-			super.cancel();
-			
-			//Stop Timer
-			if (this.timer != null) {
-				timer.cancel();
-				timer.purge();
-			}
+
+			this.stop();
 			
 			if (taskListener != null) {
 				taskListener.finish();
 			}
 		}
+		
+	}
+	
+	/**
+	 * 停止任务Timer
+	 * 
+	 */
+	public void stop() {
+
 	}
 
 }
