@@ -67,7 +67,7 @@
 	</scm>
 	
 	<build>
-		<finalName>rafiki-1.2</finalName>
+		<finalName>rafiki</finalName>
 
 		<pluginManagement>
 			<plugins>

@@ -93,11 +93,11 @@ public class TaskContainer {
 		
 		TaskGroup group = null;
 		
-		if (! taskGroupMap.containsKey(groupName)) {
-			if (groupCounter < maxGroup) {
+		if (! this.taskGroupMap.containsKey(groupName)) {
+			if (this.groupCounter < this.maxGroup) {
 				group = new TaskGroup(groupName);
-				taskGroupMap.put(groupName, group);
-				groupCounter ++;
+				this.taskGroupMap.put(groupName, group);
+				this.groupCounter ++;
 			} else {
 				logger.error(String.format("container=%s; exception=max group count is %d", name, maxGroup));
 			}
@@ -118,7 +118,7 @@ public class TaskContainer {
 	 * 
 	 */
 	public void addTask(Task task, String groupName) throws TaskException {
-		TaskGroup group = taskGroupMap.get(groupName);
+		TaskGroup group = this.taskGroupMap.get(groupName);
 
 		if (group == null) {
 			group = addGroup(groupName);
@@ -127,11 +127,11 @@ public class TaskContainer {
 		int maxTask = group.getMaxTask();
 		
 		if (group != null) {
-			if (taskCounter < maxTask && task != null) {
+			if (this.taskCounter < maxTask && task != null) {
 				group.addTask(task);
-				taskGroupMap.put(groupName, group); 
+				this.taskGroupMap.put(groupName, group); 
 				
-				taskCounter ++;
+				this.taskCounter ++;
 		
 				logger.debug(String.format("task=%s; group=%s; action=add", task.getName(), groupName));
 			} else {
@@ -174,7 +174,7 @@ public class TaskContainer {
 	 * @throws TaskException 当任务组或任务不存在时抛出任务移除异常
 	 */
 	public void removeTask(String taskName, String groupName) throws TaskException {
-		TaskGroup group = taskGroupMap.get(groupName);
+		TaskGroup group = this.taskGroupMap.get(groupName);
 		if (group != null) {
 			group.stop(taskName);
 			
@@ -182,7 +182,7 @@ public class TaskContainer {
 			if (task != null) {
 				logger.debug(String.format("task=%s; group=%s; action=remove", task.getName(), groupName));
 			}
-			taskCounter --;
+			this.taskCounter --;
 		}
 	}
 
@@ -199,9 +199,9 @@ public class TaskContainer {
 		if (!groupName.equals(TaskGroup.DEFAULT)) {
 			
 			stopGroup(groupName);
-			TaskGroup taskGroup = taskGroupMap.remove(groupName);
+			TaskGroup taskGroup = this.taskGroupMap.remove(groupName);
 			if (taskGroup != null) {
-				groupCounter --;
+				this.groupCounter --;
 			}
 			logger.debug(String.format("group=%s; action=remove", groupName));
 		}
@@ -228,7 +228,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务组启动异常
 	 */
 	public void startTask(String taskName, String groupName) throws TaskException {
-		TaskGroup group = taskGroupMap.get(groupName);
+		TaskGroup group = this.taskGroupMap.get(groupName);
 		if (group != null) {
 			group.start(taskName);
 		}
@@ -243,7 +243,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务组启动异常
 	 */
 	public void startGroup(String groupName) throws TaskException {
-		TaskGroup group = taskGroupMap.get(groupName);
+		TaskGroup group = this.taskGroupMap.get(groupName);
 		if (group != null) {
 			group.start();
 		}
@@ -271,7 +271,7 @@ public class TaskContainer {
 		if (daemon) {
 			this.daemon.start();
 		}
-		Set<String> groupNameSet = taskGroupMap.keySet();
+		Set<String> groupNameSet = this.taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			if (StringUtils.isNotEmpty(groupName)) {
 				this.startGroup(groupName);
@@ -285,7 +285,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务暂停异常
 	 */
 	public void pause() throws TaskException {
-		Set<String> groupNameSet = taskGroupMap.keySet();
+		Set<String> groupNameSet = this.taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			pauseGroup(groupName);
 		}
@@ -311,7 +311,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务暂停异常
 	 */
 	public void pauseTask(String taskName, String groupName) throws TaskException {
-		TaskGroup taskGroup = taskGroupMap.get(groupName);
+		TaskGroup taskGroup = this.taskGroupMap.get(groupName);
 		if (taskGroup != null) {
 			taskGroup.pause(taskName);
 		}
@@ -325,7 +325,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务暂停异常
 	 */
 	public void pauseGroup(String groupName) throws TaskException {
-		TaskGroup taskGroup = taskGroupMap.get(groupName);
+		TaskGroup taskGroup = this.taskGroupMap.get(groupName);
 		if (taskGroup != null) {
 			taskGroup.pause();
 		}
@@ -351,7 +351,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务停止异常
 	 */
 	public void stopTask(String taskName, String groupName) throws TaskException {
-		TaskGroup group = (TaskGroup) taskGroupMap.get(groupName);
+		TaskGroup group = (TaskGroup) this.taskGroupMap.get(groupName);
 		if (group != null) {
 			group.stop(taskName);
 			logger.debug(String.format("task=%s, group=%s; action=stop", taskName, groupName));
@@ -366,7 +366,7 @@ public class TaskContainer {
 	 * @throws TaskException 任务停止异常
 	 */
 	public void stopGroup(String groupName) throws TaskException {
-		TaskGroup group = (TaskGroup) taskGroupMap.get(groupName);
+		TaskGroup group = (TaskGroup) this.taskGroupMap.get(groupName);
 		if (group != null) {
 			group.stop();
 			logger.debug(String.format("group=%s; action=stop", groupName));
@@ -383,7 +383,7 @@ public class TaskContainer {
 	public void stop() throws TaskException {
 		this.daemon.stop();
 		
-		Set<String> groupNameSet = taskGroupMap.keySet();
+		Set<String> groupNameSet = this.taskGroupMap.keySet();
 		for (String groupName : groupNameSet) {
 			if (StringUtils.isNotEmpty(groupName)) {
 				this.stopGroup(groupName);

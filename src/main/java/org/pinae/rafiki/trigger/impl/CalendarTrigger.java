@@ -26,20 +26,23 @@ public class CalendarTrigger extends AbstractTrigger {
 	private String parseFormat[] = { "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss" };
 
 	@Override
-	public boolean match() {
+	public boolean match(Date now) {
 
 		if (super.isFinish()) {
 			return false;
 		}
 
-		Date now = new Date();
-
-		for (Date[] time : timeList) {
+		for (Date[] time : this.timeList) {
 			if (time != null && time.length == 2) {
 
 				Date startDate = time[0];
 				Date endDate = time[1];
 
+				if (now.equals(startDate) || now.equals(endDate)) {
+					super.incExecuteCount();
+					return true;
+				}
+				
 				if (endDate == null && now.after(startDate)) {
 					super.incExecuteCount();
 					return true;
@@ -60,7 +63,7 @@ public class CalendarTrigger extends AbstractTrigger {
 	 * 
 	 * <p>
 	 * 日历的格式是 'startTime - endTime'
-	 * 时间格式为 'yyyy/mm/dd HH/MM/SS'
+	 * 时间格式为 'yyyy/mm/dd HH:MM:SS' 或者 'yyyy-mm-dd HH:MM:SS'
 	 * 例如:  '2015/02/12 12:00:00 - 2015/02/13 12:00:00'
 	 * </p>
 	 * 
@@ -70,8 +73,8 @@ public class CalendarTrigger extends AbstractTrigger {
 		String startTime = "";
 		String endTime = "";
 
-		for (int i = 0; i < timeFormat.length; i++) {
-			String absoluteTimeFormat = "(" + timeFormat[i] + ")\\s*-\\s*(" + timeFormat[i] + ")";
+		for (int i = 0; i < this.timeFormat.length; i++) {
+			String absoluteTimeFormat = "(" + this.timeFormat[i] + ")\\s*-\\s*(" + this.timeFormat[i] + ")";
 
 			if (time.matches(absoluteTimeFormat)) {
 				Pattern pattern = Pattern.compile(absoluteTimeFormat);
@@ -85,13 +88,13 @@ public class CalendarTrigger extends AbstractTrigger {
 		}
 
 		try {
-			for (int i = 0; i < timeFormat.length; i++) {
-				if (startTime.matches(timeFormat[i]) && endTime.matches(timeFormat[i])) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(parseFormat[i]);
+			for (int i = 0; i < this.timeFormat.length; i++) {
+				if (startTime.matches(this.timeFormat[i]) && endTime.matches(this.timeFormat[i])) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat(this.parseFormat[i]);
 					Date startDate = dateFormat.parse(startTime);
 					Date endDate = dateFormat.parse(endTime);
 
-					timeList.add(new Date[] { startDate, endDate });
+					this.timeList.add(new Date[] { startDate, endDate });
 				}
 			}
 		} catch (ParseException e) {
@@ -114,7 +117,7 @@ public class CalendarTrigger extends AbstractTrigger {
 		startTime = startTime == null ? new Date() : startTime;
 		endtime = endtime == null ? new Date() : endtime;
 
-		timeList.add(new Date[] { startTime, endtime });
+		this.timeList.add(new Date[] { startTime, endtime });
 	}
 
 	/**
@@ -126,7 +129,7 @@ public class CalendarTrigger extends AbstractTrigger {
 	public void setTime(Date startTime) {
 		startTime = startTime == null ? new Date() : startTime;
 
-		timeList.add(new Date[] { startTime, null });
+		this.timeList.add(new Date[] { startTime, null });
 	}
 
 }

@@ -10,14 +10,14 @@ import org.apache.log4j.Logger;
 
 public class CronTriggerExample {
 	
-	private static Logger log = Logger.getLogger(CronTriggerExample.class);
+	private static Logger logger = Logger.getLogger(CronTriggerExample.class);
 	
 	public static Trigger getTrigger0(){
 		CronTrigger trigger = null;
 		try {
 			trigger = new CronTrigger("0-30/5 * * * * * *");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -27,7 +27,7 @@ public class CronTriggerExample {
 		try {
 			trigger = new CronTrigger("0 * * * * * *");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -37,7 +37,7 @@ public class CronTriggerExample {
 		try {
 			trigger = new CronTrigger("30 1-5 * * * * *");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -47,7 +47,7 @@ public class CronTriggerExample {
 		try {
 			trigger = new CronTrigger("0 * 12-17 * * * *");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -57,7 +57,7 @@ public class CronTriggerExample {
 		try {
 			trigger = new CronTrigger("0 * * 25-30 * * *");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -67,7 +67,7 @@ public class CronTriggerExample {
 		try {
 			trigger = new CronTrigger("0 * * * DEC SUN *");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -77,7 +77,7 @@ public class CronTriggerExample {
 		try {
 			trigger = new CronTrigger("0 * * * DEC * 2013");
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}
@@ -89,7 +89,7 @@ public class CronTriggerExample {
 			trigger.setStartTime(today(15, 10, 0));
 			trigger.setEndTime(today(21, 30, 0));
 		} catch (TriggerException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
 		return trigger;
 	}	

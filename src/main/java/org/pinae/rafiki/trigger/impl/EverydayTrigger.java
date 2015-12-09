@@ -26,23 +26,22 @@ public class EverydayTrigger extends AbstractTrigger {
 	private List<String> timeList = new ArrayList<String>();
 
 	@Override
-	public boolean match() {
+	public boolean match(Date now) {
 
 		if (super.isFinish()) {
 			return false;
 		}
 
-		Date now = new Date();
 		String date = new SimpleDateFormat("yyyy/MM/dd").format(now);
 
-		for (String time : timeList) {
+		for (String time : this.timeList) {
 			if (StringUtils.isNotBlank(time)) {
 
 				String startTime = "";
 				String endTime = "";
 
-				if (time.matches(periodTimeFormat)) {
-					Pattern pattern = Pattern.compile(periodTimeFormat);
+				if (time.matches(this.periodTimeFormat)) {
+					Pattern pattern = Pattern.compile(this.periodTimeFormat);
 					Matcher matcher = pattern.matcher(time);
 
 					if (matcher.find() && matcher.groupCount() == 2) {
@@ -65,7 +64,7 @@ public class EverydayTrigger extends AbstractTrigger {
 					logger.warn(String.format("Parse Error: time=%s, exception=%s", time, e.getMessage()));
 				}
 
-				if (now.after(startDate) && now.before(endDate)) {
+				if (now.equals(startDate) || now.equals(endDate) || (now.after(startDate) && now.before(endDate))) {
 					super.incExecuteCount();
 
 					return true;
@@ -92,11 +91,11 @@ public class EverydayTrigger extends AbstractTrigger {
 				String times[] = timeText.split(";");
 				for (String time : times) {
 					if (StringUtils.isNotBlank(time)) {
-						timeList.add(time.trim());
+						this.timeList.add(time.trim());
 					}
 				}
 			} else {
-				timeList.add(timeText);
+				this.timeList.add(timeText);
 			}
 		}
 	}

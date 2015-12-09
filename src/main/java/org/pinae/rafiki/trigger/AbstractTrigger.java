@@ -145,7 +145,7 @@ public abstract class AbstractTrigger implements Trigger {
 		return false;
 	}
 
-	public abstract boolean match() ;
+	public abstract boolean match(Date now) ;
 	
 	public Trigger clone() throws CloneNotSupportedException {
 		Object cloneObj = super.clone();

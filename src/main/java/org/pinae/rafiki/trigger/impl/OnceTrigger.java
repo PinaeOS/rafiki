@@ -1,5 +1,7 @@
 package org.pinae.rafiki.trigger.impl;
 
+import java.util.Date;
+
 import org.pinae.rafiki.trigger.AbstractTrigger;
 
 /**
@@ -16,7 +18,7 @@ public class OnceTrigger extends AbstractTrigger {
 	}
 
 	@Override
-	public boolean match() {
+	public boolean match(Date now) {
 		
 		if (super.isFinish()) {
 			return false;

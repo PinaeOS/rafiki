@@ -24,7 +24,7 @@ public interface Trigger extends Cloneable {
 
 	public int getRepeatCount();
 
-	public boolean match();
+	public boolean match(Date now);
 
 	public void setStartTime(Date startTime);
 

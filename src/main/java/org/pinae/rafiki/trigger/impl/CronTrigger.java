@@ -73,7 +73,7 @@ public class CronTrigger extends AbstractTrigger {
 	 * @param cron Unix cron text
 	 */
 	public void setCron(String cron) {
-		cronParser = new CronParser(cron);
+		this.cronParser = new CronParser(cron);
 	}
 
 	/**
@@ -94,13 +94,13 @@ public class CronTrigger extends AbstractTrigger {
 		}
 	}
 
-	public boolean match() {
+	public boolean match(Date now) {
 
 		if (super.isFinish()) {
 			return false;
 		}
 
-		boolean cronMatch = cronParser.match(zone, new Date().getTime());
+		boolean cronMatch = this.cronParser.match(this.zone, now.getTime());
 		if (cronMatch) {
 			super.incExecuteCount();
 
@@ -200,7 +200,7 @@ public class CronTrigger extends AbstractTrigger {
 			for (int i = 0; i < 12; i++) {
 				value = value.replaceAll(months[i], Integer.toString(i));
 			}
-			return parseInteger(value, 1, 12);
+			return parseInteger(value, 0, 11);
 		}
 
 		private Set<Integer> parseDayOfWeek(String value) {

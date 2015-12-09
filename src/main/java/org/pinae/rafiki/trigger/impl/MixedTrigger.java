@@ -1,5 +1,6 @@
 package org.pinae.rafiki.trigger.impl;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,31 +32,29 @@ public class MixedTrigger extends AbstractTrigger {
 	}
 
 	@Override
-	public boolean match() {
+	public boolean match(Date now) {
 		
 		if (super.isFinish()) {
 			return false;
 		}
 		
-		long now = System.currentTimeMillis();
-		
-		for (Trigger trigger : triggerSet) {
+		for (Trigger trigger : this.triggerSet) {
 			if (trigger != null) {
 				
-				if (now > trigger.getStartTime().getTime()) {
+				if (now.getTime() > trigger.getStartTime().getTime()) {
 				
-					boolean triggerMatch = trigger.match();
+					boolean triggerMatch = trigger.match(now);
 					
-					if (!triggerMatch && operate == AND) {
+					if (!triggerMatch && this.operate == AND) {
 						return false;
-					} else if (triggerMatch && operate == OR) {
+					} else if (triggerMatch && this.operate == OR) {
 						super.incExecuteCount();
 						return true;
 					}
 				}
 			}
 		}
-		if (operate == AND) {
+		if (this.operate == AND) {
 			super.incExecuteCount();
 			return true;
 		} else {
@@ -73,7 +72,7 @@ public class MixedTrigger extends AbstractTrigger {
 			if (trigger.isRepeat()){
 				this.setRepeat(true);
 			}
-			triggerSet.add(trigger);
+			this.triggerSet.add(trigger);
 		}
 	}
 	

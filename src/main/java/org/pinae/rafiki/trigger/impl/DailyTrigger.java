@@ -18,12 +18,12 @@ public class DailyTrigger extends EverydayTrigger {
 	private List<String> dayList = new ArrayList<String>();
 
 	@Override
-	public boolean match() {
-		Date now = new Date();
+	public boolean match(Date now) {
+
 		String date = new SimpleDateFormat("yyyy/MM/dd").format(now);
 
-		if (dayList.contains(date)) {
-			return super.match();
+		if (this.dayList.contains(date)) {
+			return super.match(now);
 		} else {
 			return false;
 		}
@@ -46,11 +46,11 @@ public class DailyTrigger extends EverydayTrigger {
 				String dates[] = dateText.split(";");
 				for (String date : dates) {
 					if (StringUtils.isNotBlank(date)) {
-						dayList.add(date.trim());
+						this.dayList.add(date.trim());
 					}
 				}
 			} else {
-				dayList.add(dateText);
+				this.dayList.add(dateText);
 			}
 		}
 	}

@@ -12,7 +12,7 @@ public class WeekdayTriggerExample {
 		WeekdayTrigger trigger = new WeekdayTrigger();
 		trigger.setRepeatInterval(30000);
 		
-		trigger.setWeekday(Calendar.MONTH);
+		trigger.setWeekday(Calendar.MONDAY);
 		trigger.setWeekday(Calendar.FRIDAY);
 		trigger.setWeekday(Calendar.SATURDAY);
 		trigger.setWeekday(Calendar.SUNDAY);

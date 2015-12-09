@@ -62,11 +62,11 @@ public final class TaskRunner implements Runnable {
 		this.task = task;
 		
 		if (task instanceof TaskListener) {
-			taskListener = (TaskListener)task;
+			this.taskListener = (TaskListener)task;
 		}
 		
-		if (taskListener != null) {
-			taskListener.start();
+		if (this.taskListener != null) {
+			this.taskListener.start();
 		}
 
 		this.job = task.getJob();
@@ -74,21 +74,22 @@ public final class TaskRunner implements Runnable {
 			this.trigger = (AbstractTrigger)task.getTrigger();
 		}
 		
-		if (job instanceof JobListener) {
-			jobListener = (JobListener) job;
+		if (this.job instanceof JobListener) {
+			this.jobListener = (JobListener) job;
 		}
 
 	}
 
 	public void run() {
 		
-		if (trigger == null) {
+		if (this.trigger == null) {
 			return;
 		}
 
-		if (! trigger.isFinish() && task.getStatus() != Task.Status.STOP) {
-
-			if (trigger.match() && task.getStatus() == Task.Status.RUNNING && task.getStatus() != Task.Status.PAUSE) {
+		if (! this.trigger.isFinish() && this.task.getStatus() != Task.Status.STOP) {
+			
+			Date now = new Date();
+			if (this.trigger.match(now) && this.task.getStatus() == Task.Status.RUNNING && this.task.getStatus() != Task.Status.PAUSE) {
 
 				this.startTime = System.currentTimeMillis();
 
@@ -96,26 +97,26 @@ public final class TaskRunner implements Runnable {
 
 				try {
 
-					if (jobListener != null) {
-						jobListener.beforeJobExecute();
+					if (this.jobListener != null) {
+						this.jobListener.beforeJobExecute();
 					}
 
-					if (job.execute() == false) {
-						if (jobListener != null) {
-							jobListener.executeFail();
+					if (this.job.execute() == false) {
+						if (this.jobListener != null) {
+							this.jobListener.executeFail();
 						}
 					}
 
-					if (jobListener != null) {
-						jobListener.afterJobExecute();
+					if (this.jobListener != null) {
+						this.jobListener.afterJobExecute();
 					}
 
 				} catch (Exception e) {
 					logger.debug(String.format("task=%s; group=%s; date=%s; exception=%s", task, task.getGroup(), dateFormat.format(new Date()),
 							e.getMessage()));
 
-					if (jobListener != null) {
-						jobListener.executeException();
+					if (this.jobListener != null) {
+						this.jobListener.executeException();
 					}
 				}
 
@@ -129,8 +130,8 @@ public final class TaskRunner implements Runnable {
 		} else {
 			logger.debug(String.format("task=%s; group=%s; date=%s; action=finish", task, task.getGroup(), dateFormat.format(new Date())));
 			
-			if (taskListener != null) {
-				taskListener.finish();
+			if (this.taskListener != null) {
+				this.taskListener.finish();
 			}
 		}
 		

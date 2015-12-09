@@ -6,7 +6,7 @@ import org.pinae.rafiki.job.JobException;
 
 public class DelayJob implements Job {
 
-	private static Logger log = Logger.getLogger(DelayJob.class);
+	private static Logger logger = Logger.getLogger(DelayJob.class);
 	
 	private int jobId = 0;
 	
@@ -26,9 +26,9 @@ public class DelayJob implements Job {
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
-			log.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
+			logger.error(String.format("getTrigger Exception: exception=%s", e.getMessage()));
 		}
-		log.info(String.format("Delay Job %d Finish: time=%d",  jobId, System.currentTimeMillis()));
+		logger.info(String.format("Delay Job %d Finish: time=%d",  jobId, System.currentTimeMillis()));
 		
 		return true;
 	}

@@ -77,7 +77,7 @@ public class TaskGroup {
 		this.name = name;
 		this.maxTask = maxTask;
 		
-		executor = new ScheduledThreadPoolExecutor(maxTask);
+		this.executor = new ScheduledThreadPoolExecutor(maxTask);
 	}
 
 	/**
@@ -108,16 +108,16 @@ public class TaskGroup {
 		if (taskName == null) {
 			task.setName(job.getName() != null ? job.getName() : job.toString());
 		}
-		if (taskMap.containsKey(taskName)) {
+		if (this.taskMap.containsKey(taskName)) {
 			throw new TaskException("Already has same task name : " + taskName);
 		}
 		
 		task.setGroup(this);
-		taskMap.put(taskName, task);
+		this.taskMap.put(taskName, task);
 		
-		if (status == Status.NOT_ANY_TASK) {
-			status = Status.READY_TO_RUN;
-		} else if (status == Status.RUNNING) {
+		if (this.status == Status.NOT_ANY_TASK) {
+			this.status = Status.READY_TO_RUN;
+		} else if (this.status == Status.RUNNING) {
 			start(task);
 		}
 	}
@@ -134,13 +134,13 @@ public class TaskGroup {
 	public Task removeTask(String taskName) throws TaskException {
 		Task task = null;
 
-		if (taskMap.size() > 0) {
-			if (taskMap.containsKey(taskName)) {
-				task = taskMap.remove(taskName);
+		if (this.taskMap.size() > 0) {
+			if (this.taskMap.containsKey(taskName)) {
+				task = this.taskMap.remove(taskName);
 				if (task != null) {
 					task.setStatus(Task.Status.STOP);
-					if (taskMap.size() == 0) {
-						status = Status.NOT_ANY_TASK;
+					if (this.taskMap.size() == 0) {
+						this.status = Status.NOT_ANY_TASK;
 					}
 				} else {
 					throw new TaskException("No such Task :" + taskName);
@@ -158,9 +158,9 @@ public class TaskGroup {
 	 */
 	public void start() throws TaskException {
 		
-		Set<String> taskNameSet = taskMap.keySet();
+		Set<String> taskNameSet = this.taskMap.keySet();
 		for (String taskName : taskNameSet) {
-			Task task = taskMap.get(taskName);
+			Task task = this.taskMap.get(taskName);
 			start(task);
 		}
 		status = Status.RUNNING;
@@ -174,7 +174,7 @@ public class TaskGroup {
 	 * @throws TaskException 任务启动异常
 	 */
 	public void start(String taskName) throws TaskException {
-		Task task = taskMap.get(taskName);
+		Task task = this.taskMap.get(taskName);
 		if (task != null) {
 			start(task);
 		} else {
@@ -208,15 +208,15 @@ public class TaskGroup {
 				TaskRunner taskRunner = new TaskRunner(task);
 				
 				if (task.getTrigger().isRepeat()) {
-					executor.scheduleWithFixedDelay(taskRunner, startTime, trigger.getRepeatInterval(), TimeUnit.MILLISECONDS);
+					this.executor.scheduleWithFixedDelay(taskRunner, startTime, trigger.getRepeatInterval(), TimeUnit.MILLISECONDS);
 				} else {
-					executor.schedule(taskRunner, startTime, TimeUnit.MILLISECONDS);
+					this.executor.schedule(taskRunner, startTime, TimeUnit.MILLISECONDS);
 				}
 				
 				task.setRunner(taskRunner);
 				task.setStatus(Task.Status.RUNNING);
 				
-				taskMap.put(task.getName(), task);
+				this.taskMap.put(task.getName(), task);
 			} else {
 				task.setStatus(Task.Status.RUNNING);
 			}
@@ -232,7 +232,7 @@ public class TaskGroup {
 	 * @throws TaskException 任务暂停异常
 	 */
 	public void pause() throws TaskException {
-		Set<String> taskNameSet = taskMap.keySet();
+		Set<String> taskNameSet = this.taskMap.keySet();
 		for (String taskName : taskNameSet) {
 			pause(taskName);
 		}
@@ -248,7 +248,7 @@ public class TaskGroup {
 	 * @throws TaskException 任务暂停异常
 	 */
 	public void pause(String taskName) throws TaskException {
-		Task task = taskMap.get(taskName);
+		Task task = this.taskMap.get(taskName);
 		if (task != null) {
 			task.setStatus(Task.Status.PAUSE);
 		} else {
@@ -262,7 +262,7 @@ public class TaskGroup {
 	 * @throws TaskException 任务停止异常
 	 */
 	public void stop() throws TaskException {
-		Set<String> taskNameSet = taskMap.keySet();
+		Set<String> taskNameSet = this.taskMap.keySet();
 		for (String taskName : taskNameSet) {
 			stop(taskName);
 		}
@@ -281,7 +281,7 @@ public class TaskGroup {
 	 */
 	public void stop(String taskName) throws TaskException {
 		
-		Task task = taskMap.get(taskName);
+		Task task = this.taskMap.get(taskName);
 		if (task != null) {
 			task.setStatus(Task.Status.STOP);
 		} else {
