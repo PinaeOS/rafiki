@@ -54,12 +54,14 @@ public class MixedTrigger extends AbstractTrigger {
 				}
 			}
 		}
+		
 		if (this.operate == AND) {
 			super.incExecuteCount();
 			return true;
 		} else {
 			return false;
 		}
+		
 	}
 	
 	/**
