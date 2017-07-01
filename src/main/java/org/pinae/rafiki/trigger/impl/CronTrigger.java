@@ -17,6 +17,8 @@ import org.pinae.rafiki.trigger.TriggerException;
  * 
  */
 public class CronTrigger extends AbstractTrigger {
+	private String cron;
+	
 	private CronParser cronParser;
 	private TimeZone zone = TimeZone.getDefault();
 
@@ -73,7 +75,17 @@ public class CronTrigger extends AbstractTrigger {
 	 * @param cron Unix cron text
 	 */
 	public void setCron(String cron) {
+		this.cron = cron;
 		this.cronParser = new CronParser(cron);
+	}
+	
+	/**
+	 * 获取Cron表达式
+	 * 
+	 * @return cron表达式
+	 */
+	public String getCron() {
+		return this.cron;
 	}
 
 	/**
