@@ -11,6 +11,8 @@ import java.util.Date;
 public interface Trigger extends Cloneable {
 
 	public String getName();
+	
+	public void setName(String name);
 
 	public Date getStartTime();
 

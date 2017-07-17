@@ -28,8 +28,8 @@ public class Tasks {
 		Task task = new Task();
 
 		ReflectionJob job = new ReflectionJob();
-		job.setClass("org.pinae.rafiki.job.HelloJob");
-		job.setMethod("sayHello");
+		job.setClassName("org.pinae.rafiki.job.HelloJob");
+		job.setMethodName("sayHello");
 		Object[] parameters = new Object[2];
 		parameters[0] = new String("Hello");
 		parameters[1] = new String(" World");
@@ -45,8 +45,8 @@ public class Tasks {
 	public static Task getTimeTaskForMultiTrigger() throws JobException {
 		Task task = new Task();
 		ReflectionJob job = new ReflectionJob();
-		job.setClass("org.pinae.rafiki.job.TimeJob");
-		job.setMethod("showTime");
+		job.setClassName("org.pinae.rafiki.job.TimeJob");
+		job.setMethodName("showTime");
 
 		task.setName("TimeJob");
 		task.setJob(job);
@@ -57,8 +57,8 @@ public class Tasks {
 	public static Task getTimeTaskForCalendarTrigger() throws JobException {
 		Task task = new Task();
 		ReflectionJob job = new ReflectionJob();
-		job.setClass("org.pinae.rafiki.job.TimeJob");
-		job.setMethod("showTime");
+		job.setClassName("org.pinae.rafiki.job.TimeJob");
+		job.setMethodName("showTime");
 
 		task.setName("TimeJob");
 		task.setJob(job);

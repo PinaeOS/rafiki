@@ -1,6 +1,5 @@
 package org.pinae.rafiki.job.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.pinae.rafiki.job.AbstractJob;
@@ -14,28 +13,40 @@ import org.pinae.rafiki.job.JobException;
  * 
  */
 public class ReflectionJob extends AbstractJob {
-	private String method;
-	private Class<?> taskClass;
-	private Object taskObject;
+	
+	private Class<?> clazz;
+	private Object object;
+	
+	private String methodName;
+	private Method method;
+
 	private Object[] parameters;
 	
 	private Object result;
+	
+	public ReflectionJob() {
+		
+	}
+	
+	public ReflectionJob(Class<?> clazz, Method method) {
+		this.clazz = clazz;
+		this.method = method;
+	}
 
-	public void setClass(String clazz) throws JobException {
+	public void setClassName(String className) throws JobException {
 		try {
-			taskClass = Class.forName(clazz);
-			taskObject = taskClass.newInstance();
+			this.clazz = Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			throw new JobException(e);
-		} catch (InstantiationException e) {
-			throw new JobException(e);
-		} catch (IllegalAccessException e) {
 			throw new JobException(e);
 		}
 	}
-
-	public void setMethod(String method) {
+	
+	public void setMethod(Method method) {
 		this.method = method;
+	}
+
+	public void setMethodName(String methodName) {
+		this.methodName = methodName;
 	}
 	
 	public void setParameters(Object[] parameters) {
@@ -43,7 +54,7 @@ public class ReflectionJob extends AbstractJob {
 	}
 
 	public Object getResult() {
-		return result;
+		return this.result;
 	}
 
 	@Override
@@ -57,17 +68,12 @@ public class ReflectionJob extends AbstractJob {
 			}
 		}
 		try {
-			Method method = taskClass.getMethod(this.method, paramClasses);
-			result = method.invoke(taskObject, this.parameters);
-		} catch (SecurityException e) {
-			throw new JobException(e);
-		} catch (NoSuchMethodException e) {
-			throw new JobException(e);
-		} catch (IllegalArgumentException e) {
-			throw new JobException(e);
-		} catch (InvocationTargetException e) {
-			throw new JobException(e);
-		} catch (IllegalAccessException e) {
+			this.object = this.clazz.newInstance();
+			if (method == null && methodName != null) {
+				this.method = this.clazz.getMethod(this.methodName, paramClasses);
+			}
+			this.result = method.invoke(this.object, this.parameters);
+		} catch (Exception e) {
 			throw new JobException(e);
 		}
 		
