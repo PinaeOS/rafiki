@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pinae.rafiki.job.Job;
@@ -17,41 +19,55 @@ public class TaskContainerLoader {
 	
 	private static DateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public TaskContainer getTaskContainer(Class<?> clazz) {
-		
-		TaskContainer taskContainer = new TaskContainer();
-		
+	private List<Class<?>> taskClassList = new ArrayList<Class<?>>();
+	
+	public void registerTask(Class<?> clazz) {
 		if (clazz.isAnnotationPresent(org.pinae.rafiki.annotation.Task.class)) {
-			org.pinae.rafiki.annotation.Task taskDef = clazz.getAnnotation(org.pinae.rafiki.annotation.Task.class);
-			
-			String taskName = taskDef.name();
-			String taskGroup = taskDef.group();
-			
-			Method methods[] = clazz.getDeclaredMethods();
-			for (Method method : methods) {
-				try {
-					Job job = null;
-					if (method.isAnnotationPresent(org.pinae.rafiki.annotation.Job.class)) {
-						job = getJob(clazz, method);
-					}
-					Trigger trigger = null;
-					if (method.isAnnotationPresent(org.pinae.rafiki.annotation.Trigger.class)) {
-						trigger = getTrigger(method);
-					}
-					if (taskName != null && job != null && trigger != null) {
-						Task task = new Task(taskName, job, trigger);
-						if (StringUtils.isNotBlank(taskGroup)) {
-							taskContainer.addTask(task, taskGroup);
-						} else {
-							taskContainer.addTask(task);
+			this.taskClassList.add(clazz);
+		}
+	}
+	
+	public TaskContainer getTaskContainer() {
+		return getTaskContainer("default-container");
+	}
+	
+	public TaskContainer getTaskContainer(String name) {
+		
+		TaskContainer taskContainer = new TaskContainer(name);
+		
+		for (Class<?> taskClass : this.taskClassList) {
+			if (taskClass.isAnnotationPresent(org.pinae.rafiki.annotation.Task.class)) {
+				org.pinae.rafiki.annotation.Task taskDef = taskClass.getAnnotation(org.pinae.rafiki.annotation.Task.class);
+				
+				String taskName = taskDef.name();
+				String taskGroup = taskDef.group();
+				
+				Method methods[] = taskClass.getDeclaredMethods();
+				for (Method method : methods) {
+					try {
+						Job job = null;
+						if (method.isAnnotationPresent(org.pinae.rafiki.annotation.Job.class)) {
+							job = getJob(taskClass, method);
 						}
+						Trigger trigger = null;
+						if (method.isAnnotationPresent(org.pinae.rafiki.annotation.Trigger.class)) {
+							trigger = getTrigger(method);
+						}
+						if (taskName != null && job != null && trigger != null) {
+							Task task = new Task(taskName, job, trigger);
+							if (StringUtils.isNotBlank(taskGroup)) {
+								taskContainer.addTask(task, taskGroup);
+							} else {
+								taskContainer.addTask(task);
+							}
+						}
+					} catch (Exception e) {
+						
 					}
-				} catch (Exception e) {
-					
 				}
 			}
 		}
-		return null;
+		return taskContainer;
 	}
 	
 	
